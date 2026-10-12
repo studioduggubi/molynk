@@ -4,8 +4,6 @@
   const viewport = gallery.querySelector('.campaign-viewport');
   const track = gallery.querySelector('.campaign-track');
   const slides = [...track.children];
-  const dots = [...gallery.querySelectorAll('.campaign-dot')];
-  const toggle = gallery.querySelector('.campaign-toggle');
   const status = gallery.querySelector('.campaign-status');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const review = new URLSearchParams(location.search).has('review');
@@ -17,8 +15,8 @@
     clone.querySelector('img').alt = '';
     i ? track.append(clone) : track.prepend(clone);
   });
-  let position = 1, timer, settleTimer, visible = false, hovered = false;
-  let paused = reduce.matches || review, moving = false, pointer = null;
+  let position = 1, timer, settleTimer, visible = false, hovered = false, lastMove = 0;
+  let paused = reduce.matches || review, moving = false, pointer = null, keyboardPlay = false;
   const index = () => (position - 1 + count) % count;
   function paint(animate = false, dx = 0) {
     track.style.transition = animate && !reduce.matches ? 'transform 720ms cubic-bezier(.22,.75,.2,1)' : 'none';
@@ -26,8 +24,8 @@
   }
   function schedule() {
     clearTimeout(timer);
-    if (visible && !paused && !hovered && !pointer && !moving && !document.hidden && !gallery.contains(document.activeElement)) {
-      timer = setTimeout(() => go(position + 1), 4200);
+    if (visible && !paused && !hovered && !pointer && !moving && !document.hidden && (!gallery.contains(document.activeElement) || keyboardPlay)) {
+      timer = setTimeout(() => go(position + 1), Math.max(0, 2000 - (performance.now() - lastMove)));
     }
   }
   function settle() {
@@ -42,9 +40,9 @@
     if (moving) return;
     clearTimeout(timer);
     position = next;
+    lastMove = performance.now();
     moving = true;
     paint(true);
-    dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index())));
     slides.forEach((slide, i) => slide.setAttribute('aria-hidden', String(i !== index())));
     if (manual) status.textContent = `사진 ${index() + 1} / ${count}`;
     settleTimer = setTimeout(settle, reduce.matches ? 0 : 780);
@@ -52,19 +50,17 @@
   track.addEventListener('transitionend', event => {
     if (event.target === track && event.propertyName === 'transform') settle();
   });
-  dots.forEach((dot, i) => dot.addEventListener('click', () => go(i + 1, true)));
-  function showToggle() {
-    toggle.setAttribute('aria-label', paused ? '사진 자동 넘김 재생' : '사진 자동 넘김 일시정지');
-    toggle.firstElementChild.textContent = paused ? '▷' : 'Ⅱ';
-  }
-  toggle.addEventListener('click', () => { paused = !paused; showToggle(); schedule(); });
   gallery.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { hovered = true; schedule(); } });
   gallery.addEventListener('pointerleave', () => { hovered = false; schedule(); });
   gallery.addEventListener('focusin', () => clearTimeout(timer));
-  gallery.addEventListener('focusout', () => setTimeout(schedule, 0));
+  gallery.addEventListener('focusout', () => { keyboardPlay = false; setTimeout(schedule, 0); });
   gallery.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
       e.preventDefault(); go(position + (e.key === 'ArrowRight' ? 1 : -1), true);
+    } else if (e.code === 'Space' || e.key === 'Enter') {
+      e.preventDefault(); paused = !paused; keyboardPlay = !paused;
+      status.textContent = paused ? '자동 넘김 일시정지' : '자동 넘김 재생';
+      schedule();
     }
   });
   viewport.addEventListener('pointerdown', e => {
@@ -90,12 +86,13 @@
   viewport.addEventListener('pointerup', release);
   viewport.addEventListener('pointercancel', release);
   document.addEventListener('visibilitychange', schedule);
-  reduce.addEventListener('change', () => { if (reduce.matches) { paused = true; showToggle(); settle(); } });
+  reduce.addEventListener('change', () => { if (reduce.matches) { paused = true; settle(); } });
   new IntersectionObserver(entries => {
+    lastMove = performance.now();
     visible = entries[0].isIntersecting && entries[0].intersectionRatio >= .25;
     if (visible) track.querySelectorAll('img').forEach(img => { img.loading = 'eager'; });
     schedule();
   }, { threshold:.25 }).observe(gallery);
   slides.forEach((slide, i) => slide.setAttribute('aria-hidden', String(i !== 0)));
-  paint(); showToggle(); gallery.classList.add('is-ready');
+  paint(); gallery.classList.add('is-ready');
 })();
