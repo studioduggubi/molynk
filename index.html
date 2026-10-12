@@ -204,6 +204,16 @@
 .instagram-link:hover{background:var(--cream);color:var(--pink)}
 .instagram-link:focus-visible{outline:2px solid var(--cream);outline-offset:5px}
 .instagram-link svg{width:17px;height:17px;flex:none}
+
+/* Keep the milestone legible while the number counts up. */
+.million{letter-spacing:.015em}
+.million .count-number{display:inline-block;min-width:3ch;text-align:right;font-variant-numeric:tabular-nums}
+.million .count-unit{margin-left:.025em}
+.million small{letter-spacing:0;margin-left:.025em}
+
+.visit h2{margin-bottom:12px;line-height:1.15}
+
+.hyundai-cake:focus-visible{outline:2px solid var(--pink);outline-offset:7px;border-radius:12px}
 </style>
 </head>
 <body>
@@ -240,7 +250,7 @@
 <section class="section intro" id="story">
  <div class="intro-line" aria-hidden="true"></div>
  <p class="copy reveal">안녕하세요,<br>프리미엄 스퀴시 브랜드 몰링크(MOLYNK)입니다.</p>
- <div class="million en reveal" aria-label="1억 2천만 회 이상">120M<small>+</small></div>
+ <div class="million en reveal" role="img" aria-label="1억 2천만 회 이상"><span aria-hidden="true"><span class="count-number">120</span><span class="count-unit">M</span><small>+</small></span></div>
  <p class="intro-label reveal">전 세계 틱톡 조회수 1억 2천만 회 이상.</p>
  <h2 class="serif reveal">화면 너머로 호기심을 자극했던<br>몰링크의 말랑함이<br>드디어 서울에 도착합니다.</h2>
  <p class="copy reveal">미국·상하이·스페인·일본에 이어<br>한국 지사를 설립한 몰링크가<br>더현대 서울에서 한국 첫 팝업을 선보입니다.</p>
@@ -250,10 +260,6 @@
  <h2 class="serif reveal invitation-title">그 특별한 시작에<br>초대합니다.</h2>
  <p class="copy reveal invitation-letter">자신만의 감각과 시선으로<br>새로운 트렌드를 소개하시는 분께,</p>
  <p class="copy reveal invitation-letter">몰링크의 첫 한국 무대를<br>직접 보여드리고 싶었습니다.</p>
- <div class="experience-intro" id="touch">
- <h3 class="serif reveal">손끝에 닿는 순간 느껴지는<br>독특한 촉감,</h3>
- <p class="copy reveal">가까이 볼수록 눈길을 끄는 디자인,<br>그리고 직접 만져야 알 수 있는<br>몰링크만의 매력까지.</p>
- </div>
  <button type="button" class="art-button squishy reveal" id="squeeze" data-squishy="macaron" aria-label="선택한 몰링크 제품 눌러보기"><img class="squishy-image" id="selected-product" src="product-macaron.png" alt="선택한 몰링크 스퀴시 제품" loading="lazy" width="1254" height="1254"><span class="touch-cue">꾹, 눌러보세요 ↘</span></button>
  <div class="product-picker reveal" role="group" aria-label="눌러볼 제품 고르기">
   <button type="button" data-product="macaron" aria-label="제품 1 선택" aria-pressed="true"><img src="product-macaron.png" alt="" loading="lazy"></button>
@@ -264,6 +270,10 @@
   <button type="button" data-product="gelato" aria-label="제품 6 선택" aria-pressed="false"><img src="product-gelato.png" alt="" loading="lazy"></button>
  </div>
  <p class="sr-only" id="touch-status" aria-live="polite"></p>
+ <div class="experience-intro" id="touch">
+ <h3 class="serif reveal">손끝에 닿는 순간 느껴지는<br>독특한 촉감,</h3>
+ <p class="copy reveal">가까이 볼수록 눈길을 끄는 디자인,<br>그리고 직접 만져야 알 수 있는<br>몰링크만의 매력까지.</p>
+ </div>
 
 </section>
 <section class="section space" id="space">
@@ -278,7 +288,7 @@
  <p class="reveal">방문해 주시는 날에 맞춰<br>초청 선물과 현장 안내를<br>정성껏 준비하겠습니다.</p><span class="logo tiny-logo" role="img" aria-label="몰링크"></span>
 </section>
 <section class="section visit" id="visit">
- <figure class="hyundai-cake reveal"><img src="figma-hyundai-cake.png" alt="더현대 서울 건물을 핑크 리본과 크림으로 표현한 몰링크 케이크" loading="lazy" width="998" height="666"></figure>
+ <button class="hyundai-cake squishy reveal" type="button" data-squishy="cake" aria-label="더현대 케이크 꾹 눌러보기"><img class="squishy-image" src="figma-hyundai-cake.png" alt="더현대 서울 건물을 핑크 리본과 크림으로 표현한 몰링크 케이크" loading="lazy" width="998" height="666"></button>
  <h2 class="serif reveal">기간 및 장소</h2><div class="date-range en reveal">10.22 — 10.28</div><p class="reveal">2026년 10월 22일(목)–10월 28일(수)</p>
  <div class="calendar reveal" role="group" aria-label="2026년 10월 달력. 팝업 운영 기간은 22일 목요일부터 28일 수요일까지입니다."><header><span class="en">October</span><span>2026</span></header><div class="week" aria-hidden="true"><span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span></div><div class="days" aria-hidden="true"><span></span><span></span><span></span><span></span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span><span class="event start">22</span><span class="event">23</span><span class="event row-end">24</span><span class="event row-start">25</span><span class="event">26</span><span class="event">27</span><span class="event end">28</span><span>29</span><span>30</span><span>31</span></div><p class="calendar-note"><i aria-hidden="true"></i> MOLYNK KOREA FIRST POP-UP</p></div>
  <div class="venue reveal"><h3 class="serif">더현대 서울</h3><p>지하 2층 아이코닉</p><p class="en">THE HYUNDAI SEOUL · B2 ICONIC</p><div class="actions"><a class="action" href="https://map.naver.com/p/search/%EB%8D%94%ED%98%84%EB%8C%80%20%EC%84%9C%EC%9A%B8" target="_blank" rel="noopener">지도 보기 <span>↗</span></a><a class="action primary" href="sms:01095588298">방문 일정 문의 <span>↗</span></a></div></div>
@@ -294,6 +304,34 @@ if(reviewMode){document.body.classList.add('no-motion');document.querySelectorAl
 const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealObserver=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');revealObserver.unobserve(e.target)}})},{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+// Count once when the milestone enters the viewport; keep a static accessible label.
+(() => {
+  const milestone = document.querySelector('.million');
+  const number = milestone.querySelector('.count-number');
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  if (reviewMode || motion.matches || !('IntersectionObserver' in window)) return;
+  let frame = 0, started = false;
+  const finish = () => { cancelAnimationFrame(frame); number.textContent = '120'; };
+  number.textContent = '0';
+  const observer = new IntersectionObserver(entries => {
+    if (started || !entries.some(entry => entry.isIntersecting)) return;
+    started = true; observer.disconnect();
+    if (motion.matches) { finish(); return; }
+    const start = performance.now();
+    const tick = now => {
+      const progress = Math.min(1, (now - start) / 1450);
+      number.textContent = String(Math.round(120 * (1 - Math.pow(1 - progress, 3))));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+      else finish();
+    };
+    frame = requestAnimationFrame(tick);
+  }, { threshold: .55 });
+  observer.observe(milestone);
+  motion.addEventListener('change', event => {
+    if (event.matches) { started = true; observer.disconnect(); finish(); }
+  });
+})();
+
 const sticky=document.querySelector('.sticky'),progress=document.querySelector('.progress span'),spaceImage=document.querySelector('.space-window img');
 let scrollPending=false;function updateScroll(){const max=document.documentElement.scrollHeight-innerHeight;progress.style.transform='scaleX('+Math.min(1,Math.max(0,scrollY/max))+')';sticky.classList.toggle('visible',scrollY>650);if(!reduced){const r=spaceImage.getBoundingClientRect();const t=Math.max(0,Math.min(1,(innerHeight-r.top)/(innerHeight+r.height)));spaceImage.style.transform='scale('+(1.14-t*.1)+')'}scrollPending=false}
 addEventListener('scroll',()=>{if(!scrollPending){scrollPending=true;requestAnimationFrame(updateScroll)}},{passive:true});updateScroll();
