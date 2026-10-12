@@ -319,7 +319,7 @@
 // One shared invitation. Only this contact profile varies between public links.
 (() => {
   const profiles = {
-    '2': { name: '몰링크코리아 이사 주민호', phone: '010-5536-2991', dial: '01055362991' }
+    '1': { name: '몰링크코리아 이사 주민호', phone: '010-5536-2991', dial: '01055362991' }
   };
   const profile = profiles[new URLSearchParams(location.search).get('contact')];
   if (!profile) return;
