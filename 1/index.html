@@ -18,6 +18,11 @@
 </head>
 <body>
 <!-- The complete design lives in molynk. Never duplicate its HTML or assets here. -->
-<iframe src="../?contact=1" title="몰링크 한국 첫 팝업 초대장 · 방문 문의 주민호 이사" allow="autoplay; fullscreen"></iframe>
+<iframe id="shared-invitation" title="몰링크 한국 첫 팝업 초대장 · 방문 문의 주민호 이사" allow="autoplay; fullscreen"></iframe>
+<script>
+// Refresh shared HTML on every visit; images, fonts and video retain normal caching.
+document.getElementById('shared-invitation').src = '../?contact=1&v=' + Date.now();
+</script>
+<noscript><p><a href="../?contact=1">몰링크 초대장 보기</a></p></noscript>
 </body>
 </html>
