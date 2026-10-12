@@ -319,12 +319,30 @@
  <button class="hyundai-cake squishy reveal" type="button" data-squishy="cake" aria-label="더현대 케이크 꾹 눌러보기"><img class="squishy-image" src="figma-hyundai-cake.png" alt="더현대 서울 건물을 핑크 리본과 크림으로 표현한 몰링크 케이크" loading="lazy" width="998" height="666"></button>
  <h2 class="serif reveal">기간 및 장소</h2><div class="date-range en reveal">10.22 — 10.28</div><p class="reveal">2026년 10월 22일(목)–10월 28일(수)</p>
  <div class="calendar reveal" role="group" aria-label="2026년 10월 달력. 팝업 운영 기간은 22일 목요일부터 28일 수요일까지입니다."><header><span class="en">October</span><span>2026</span></header><div class="week" aria-hidden="true"><span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span></div><div class="days" aria-hidden="true"><span></span><span></span><span></span><span></span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span><span class="event start">22</span><span class="event">23</span><span class="event row-end">24</span><span class="event row-start">25</span><span class="event">26</span><span class="event">27</span><span class="event end">28</span><span>29</span><span>30</span><span>31</span></div><p class="calendar-note"><i aria-hidden="true"></i> MOLYNK KOREA FIRST POP-UP</p></div>
- <div class="venue reveal"><h3 class="serif">더현대 서울</h3><p>지하 2층 아이코닉</p><p class="en">THE HYUNDAI SEOUL · B2 ICONIC</p><div class="actions"><a class="action" href="https://map.naver.com/p/search/%EB%8D%94%ED%98%84%EB%8C%80%20%EC%84%9C%EC%9A%B8" target="_blank" rel="noopener">지도 보기 <span>↗</span></a><a class="action primary" href="sms:01095588298">방문 일정 문의 <span>↗</span></a></div></div>
- <div class="contact reveal"><p>방문 일정 및 문의</p><p class="name">담당자 : 몰링크 한국지사장 강정희</p><a href="tel:01095588298">010-9558-8298</a></div>
+ <div class="venue reveal"><h3 class="serif">더현대 서울</h3><p>지하 2층 아이코닉</p><p class="en">THE HYUNDAI SEOUL · B2 ICONIC</p><div class="actions"><a class="action" href="https://map.naver.com/p/search/%EB%8D%94%ED%98%84%EB%8C%80%20%EC%84%9C%EC%9A%B8" target="_blank" rel="noopener">지도 보기 <span>↗</span></a><a class="action primary" data-contact-sms href="sms:01095588298">방문 일정 문의 <span>↗</span></a></div></div>
+ <div class="contact reveal"><p>방문 일정 및 문의</p><p class="name" data-contact-name>담당자 : 몰링크 한국지사장 강정희</p><a data-contact-phone href="tel:01095588298">010-9558-8298</a></div>
 </section>
 <footer class="section closing"><span class="logo reveal" role="img" aria-label="MOLYNK"></span><h2 class="serif reveal">말랑말랑 몰링크.</h2><p class="reveal">서울에서 시작되는 첫 장면에<br>함께해 주시길 기다리겠습니다.</p><p class="sign">MOLYNK KOREA 드림</p><a class="instagram-link" href="https://www.instagram.com/molynk.kr/" target="_blank" rel="noopener noreferrer" aria-label="몰링크 인스타그램 @molynk.kr, 새 탭에서 열기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>인스타그램 · @molynk.kr</span><span aria-hidden="true">↗</span></a></footer>
 </main>
-<nav class="sticky" aria-label="빠른 방문 안내"><a class="schedule" href="#visit">10.22 — 10.28 · 일정</a><a class="inquire" href="sms:01095588298">방문 일정 문의하기 ↗</a></nav>
+<nav class="sticky" aria-label="빠른 방문 안내"><a class="schedule" href="#visit">10.22 — 10.28 · 일정</a><a class="inquire" data-contact-sms href="sms:01095588298">방문 일정 문의하기 ↗</a></nav>
+<script>
+// One shared invitation. Only this contact profile varies between public links.
+(() => {
+  const profiles = {
+    '2': { name: '몰링크코리아 이사 주민호', phone: '010-5536-2991', dial: '01055362991' }
+  };
+  const profile = profiles[new URLSearchParams(location.search).get('contact')];
+  if (!profile) return;
+  document.querySelector('[data-contact-name]').textContent = '담당자 : ' + profile.name;
+  document.querySelectorAll('[data-contact-phone]').forEach(link => {
+    link.textContent = profile.phone;
+    link.href = 'tel:' + profile.dial;
+  });
+  document.querySelectorAll('[data-contact-sms]').forEach(link => {
+    link.href = 'sms:' + profile.dial;
+  });
+})();
+</script>
 <script>
 const reviewMode=new URLSearchParams(location.search).get('review')==='1';
 document.documentElement.classList.add('js');
