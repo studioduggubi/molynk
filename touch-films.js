@@ -92,7 +92,12 @@
     interact();
     if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
       event.preventDefault();
-      rail.scrollBy({left:(originals[0].offsetWidth + 12) * (event.key === 'ArrowRight' ? 1 : -1), behavior:reduced.matches ? 'instant' : 'smooth'});
+      let current = 0;
+      buttons.forEach((button, i) => {
+        if (Math.abs(left(button) - rail.scrollLeft) < Math.abs(left(buttons[current]) - rail.scrollLeft)) current = i;
+      });
+      const next = Math.max(0, Math.min(buttons.length - 1, current + (event.key === 'ArrowRight' ? 1 : -1)));
+      rail.scrollTo({left:left(buttons[next]), behavior:reduced.matches ? 'instant' : 'smooth'});
     }
     schedule();
   });
