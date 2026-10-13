@@ -223,6 +223,17 @@
 .campaign-slide{flex:0 0 100%;min-width:0;height:100%}
 .campaign .campaign-slide img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none}
 
+
+/* Real touch demonstrations belong to the existing mint experience section. */
+.touch-films{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:28px -28px 0;padding:0 28px 4px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.touch-films::-webkit-scrollbar{display:none}
+.touch-film{position:relative;flex:0 0 86%;aspect-ratio:1;overflow:hidden;scroll-snap-align:center;border:0;border-radius:18px;padding:0;background:#f6eee8;cursor:pointer;color:white;isolation:isolate}
+.touch-film video{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.touch-film:focus-visible{outline:2px solid #2d5250;outline-offset:3px}
+.touch-film-play{position:absolute;right:12px;bottom:12px;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#2d525080;opacity:0;transition:opacity .2s;pointer-events:none}
+.touch-film.is-paused .touch-film-play{opacity:1}
+@media(prefers-reduced-motion:reduce){.touch-films{scroll-behavior:auto}.touch-film-play{transition:none}}
+
 </style>
 </head>
 <body>
@@ -291,6 +302,44 @@
  <div class="experience-intro" id="touch">
  <h3 class="serif reveal">손끝에 닿는 순간 느껴지는<br>독특한 촉감,</h3>
  <p class="copy reveal">가까이 볼수록 눈길을 끄는 디자인,<br>그리고 직접 만져야 알 수 있는<br>몰링크만의 매력까지.</p>
+ <div class="touch-films" role="group" aria-label="몰링크 촉감 영상 9개, 옆으로 넘겨보세요">
+  <button class="touch-film is-paused" type="button" aria-label="분홍 케이크를 든 모델과 제품 연출 — 재생" aria-pressed="false" data-description="분홍 케이크를 든 모델과 제품 연출">
+   <video muted loop playsinline preload="none" poster="touch-film-05.jpg" width="450" height="800" aria-hidden="true"><source data-src="touch-film-05.mp4" type="video/mp4"></video>
+   <span class="touch-film-play" aria-hidden="true">▶</span>
+  </button>
+  <button class="touch-film is-paused" type="button" aria-label="빵 모양 제품을 손으로 누르는 모습 — 재생" aria-pressed="false" data-description="빵 모양 제품을 손으로 누르는 모습">
+   <video muted loop playsinline preload="none" poster="touch-film-04.jpg" width="450" height="800" aria-hidden="true"><source data-src="touch-film-04.mp4" type="video/mp4"></video>
+   <span class="touch-film-play" aria-hidden="true">▶</span>
+  </button>
+  <button class="touch-film is-paused" type="button" aria-label="곰 모양 제품을 손으로 누르는 모습 — 재생" aria-pressed="false" data-description="곰 모양 제품을 손으로 누르는 모습">
+   <video muted loop playsinline preload="none" poster="touch-film-07.jpg" width="450" height="800" aria-hidden="true"><source data-src="touch-film-07.mp4" type="video/mp4"></video>
+   <span class="touch-film-play" aria-hidden="true">▶</span>
+  </button>
+  <button class="touch-film is-paused" type="button" aria-label="리본을 쓴 모델과 케이크 제품 연출 — 재생" aria-pressed="false" data-description="리본을 쓴 모델과 케이크 제품 연출">
+   <video muted loop playsinline preload="none" poster="touch-film-08.jpg" width="450" height="800" aria-hidden="true"><source data-src="touch-film-08.mp4" type="video/mp4"></video>
+   <span class="touch-film-play" aria-hidden="true">▶</span>
+  </button>
+  <button class="touch-film is-paused" type="button" aria-label="갈색 빵 모양 제품을 손으로 누르는 모습 — 재생" aria-pressed="false" data-description="갈색 빵 모양 제품을 손으로 누르는 모습">
+   <video muted loop playsinline preload="none" poster="touch-film-09.jpg" width="450" height="800" aria-hidden="true"><source data-src="touch-film-09.mp4" type="video/mp4"></video>
+   <span class="touch-film-play" aria-hidden="true">▶</span>
+  </button>
+  <button class="touch-film is-paused" type="button" aria-label="분홍 제품을 손으로 누르는 모습 — 재생" aria-pressed="false" data-description="분홍 제품을 손으로 누르는 모습">
+   <video muted loop playsinline preload="none" poster="touch-film-06.jpg" width="450" height="800" aria-hidden="true"><source data-src="touch-film-06.mp4" type="video/mp4"></video>
+   <span class="touch-film-play" aria-hidden="true">▶</span>
+  </button>
+  <button class="touch-film is-paused" type="button" aria-label="손으로 제품을 누르고 늘리는 모습 — 재생" aria-pressed="false" data-description="손으로 제품을 누르고 늘리는 모습">
+   <video muted loop playsinline preload="none" poster="touch-film-01.jpg" width="450" height="800" aria-hidden="true"><source data-src="touch-film-01.mp4" type="video/mp4"></video>
+   <span class="touch-film-play" aria-hidden="true">▶</span>
+  </button>
+  <button class="touch-film is-paused" type="button" aria-label="캐릭터 모양 제품을 손으로 누르는 모습 — 재생" aria-pressed="false" data-description="캐릭터 모양 제품을 손으로 누르는 모습">
+   <video muted loop playsinline preload="none" poster="touch-film-02.jpg" width="450" height="800" aria-hidden="true"><source data-src="touch-film-02.mp4" type="video/mp4"></video>
+   <span class="touch-film-play" aria-hidden="true">▶</span>
+  </button>
+  <button class="touch-film is-paused" type="button" aria-label="노란 제품을 누르면 안쪽 캐릭터가 올라오는 모습 — 재생" aria-pressed="false" data-description="노란 제품을 누르면 안쪽 캐릭터가 올라오는 모습">
+   <video muted loop playsinline preload="none" poster="touch-film-03.jpg" width="450" height="800" aria-hidden="true"><source data-src="touch-film-03.mp4" type="video/mp4"></video>
+   <span class="touch-film-play" aria-hidden="true">▶</span>
+  </button>
+ </div>
  </div>
 
 </section>
@@ -376,6 +425,7 @@ addEventListener('scroll',()=>{if(!scrollPending){scrollPending=true;requestAnim
 <script src="hero-scroll.js"></script>
 <script src="product-motion.js"></script>
 <script src="campaign-gallery.js"></script>
+<script src="touch-films.js"></script>
 
 </body>
 </html>
