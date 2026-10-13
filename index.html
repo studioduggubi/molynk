@@ -229,9 +229,10 @@
 .touch-stories h3{font-size:23px;line-height:1.3;letter-spacing:-.045em;margin:0 0 20px}
 .touch-stories .copy{font-size:13px;line-height:1.5}
 @media(max-width:359px){.touch-stories h3{font-size:21px}.touch-stories .copy{font-size:12px}}
-.touch-films{position:relative;display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:30px -28px 0;padding:0 12px 4px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.touch-films{position:relative;display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:24px;scrollbar-width:none;margin:30px -28px 0;padding:0 24px 4px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
 .touch-films::-webkit-scrollbar{display:none}
-.touch-film{position:relative;flex:0 0 100%;aspect-ratio:1;overflow:hidden;scroll-snap-align:center;border:0;border-radius:18px;padding:0;background:#f6eee8;cursor:pointer;color:white;isolation:isolate}
+.touch-films::after{content:"";flex:0 0 calc(8% - 12px)}
+.touch-film{position:relative;flex:0 0 92%;aspect-ratio:1;overflow:hidden;scroll-snap-align:start;border:0;border-radius:18px;padding:0;background:#f6eee8;cursor:pointer;color:white;isolation:isolate}
 .touch-film video{display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.10);pointer-events:none}
 .touch-film:focus-visible{outline:2px solid #2d5250;outline-offset:3px}
 .touch-film-play{position:absolute;right:12px;bottom:12px;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#2d525080;opacity:0;transition:opacity .2s;pointer-events:none}
