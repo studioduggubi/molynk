@@ -24,3 +24,30 @@
 @media(max-width:1020px){.approved-layout{grid-template-columns:1fr}.approved-copy{display:grid;grid-template-columns:1fr 1fr;gap:15px}.approved-copy article{margin:0;padding:0 0 12px}.approved-copy>.caption,.approved-copy>.approved-jump{grid-column:1/-1}}
 @media(max-width:600px){.approved-zoning{padding:17px}.approved-heading{align-items:flex-start;gap:10px}.approved-heading h2{font-size:20px}.approved-heading>a{font-size:12px}.approved-copy{grid-template-columns:1fr}.approved-copy h3{font-size:16px}.approved-copy p{font-size:13px}.approved-layout{gap:18px}}
 @media print{.approved-zoning{padding:0;border:0}.approved-layout{display:block}.approved-copy{display:none}.approved-heading>a{display:none}.approved-image{max-width:650px;border:0}}
+
+.approved-heading{flex-wrap:wrap}.approved-heading>div:first-child{flex:1 1 250px;min-width:0}
+.scenario-menu{display:flex;gap:3px;padding:3px;background:#f2ecef;border:1px solid var(--line);border-radius:9px;flex:0 0 auto}
+.scenario-menu button{border:0;border-radius:6px;padding:5px 11px;min-height:34px;font-size:12px;font-weight:700;background:transparent;color:var(--muted)}
+.scenario-menu button.active{background:white;color:var(--pink);box-shadow:0 1px 3px #ded3d9}
+.product-zone-label{display:none;pointer-events:none;font:700 16px 'Apple SD Gothic Neo','Malgun Gothic','Noto Sans CJK KR',sans-serif;fill:#594d53;paint-order:stroke;stroke:white;stroke-width:5px;stroke-linejoin:round}
+.products-mode .product-zone-label,.customer-map .product-zone-label{display:block}
+.product-zoning-heading{display:flex;justify-content:space-between;align-items:start;gap:16px;flex-wrap:wrap;margin-bottom:18px}.product-zoning-heading p{font-size:13px;color:var(--muted)}
+.scenario-product-label{font-size:12px;padding:4px 9px;border-radius:7px;background:#f2ecef;color:var(--pink);white-space:nowrap}
+.product-zone-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.product-zone-card{padding:17px;border:1px solid var(--line);border-radius:12px;min-width:0;background:#fffdfa}
+.product-zone-title{display:flex;justify-content:space-between;align-items:start;gap:10px}.product-zone-title h3{font-size:17px;color:var(--teal)}.product-zone-title>span{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.product-zone-card>p{font-size:12px;color:var(--muted);margin:8px 0 14px}.product-zone-card ul{list-style:none;padding:0;margin:0}.product-zone-card li{display:flex;gap:11px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.product-zone-card li>div{min-width:0;overflow-wrap:anywhere}.product-zone-card li b{display:block;font-size:13px}.product-zone-card li small{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.zone-product-photo{background:#fcf8f4;border:0;padding:0;border-radius:8px;flex-shrink:0}.zone-product-photo img{display:block;width:64px;height:64px;object-fit:contain;border-radius:8px}
+.warehouse-buffer{margin-top:16px;padding:16px;border-radius:11px;background:#edf4f0}.warehouse-buffer p{font-size:13px}.warehouse-buffer .caption{font-size:12px}
+@media(max-width:600px){.scenario-menu button{padding:5px 10px}.product-zone-groups{grid-template-columns:1fr}.product-zone-title h3{font-size:16px}.product-zone-card{padding:14px}.zone-product-photo img{width:56px;height:56px}}
+
+/* Queue planning v11 */
+.queue-plan[hidden],[data-queue-link][hidden]{display:none!important}
+.queue-plan{scroll-margin-top:20px}.queue-heading{display:flex;justify-content:space-between;align-items:center;gap:18px}.queue-heading h2{margin-bottom:10px}.queue-heading small{color:#946021}.queue-heading>a{white-space:nowrap}
+.queue-status{display:flex;gap:16px;align-items:baseline;background:#fff4df;border:1px solid #e6c692;border-radius:12px;padding:15px 18px;margin:18px 0;color:#785020}.queue-status b{white-space:nowrap}.queue-status span{font-size:14px;line-height:1.7}
+.queue-image{display:block;border:1px solid #e3e2df;border-radius:12px;overflow:hidden}.queue-image img{display:block;width:100%;height:auto}
+.queue-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px}.queue-steps article,.queue-operations article{padding:18px;background:#faf8f4;border:1px solid #ece6df;border-radius:12px}.queue-steps b{color:#80612d}.queue-steps p,.queue-operations p{line-height:1.8;font-size:14px;margin-bottom:0}
+.queue-operations{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.queue-operations h3{font-size:17px;margin:0 0 8px}.queue-operations p+p{color:#73716e}.queue-overlay text{font-family:inherit;font-weight:600}
+@media(max-width:800px){.queue-steps{grid-template-columns:1fr 1fr}.queue-heading{align-items:flex-start}.queue-status{display:block}.queue-status b{display:block;margin-bottom:7px}.queue-heading>a{font-size:13px}}
+@media(max-width:520px){.queue-heading{display:block}.queue-heading>a{display:inline-block;margin-top:4px}.queue-steps,.queue-operations{grid-template-columns:1fr}.queue-steps article,.queue-operations article{padding:15px}}
