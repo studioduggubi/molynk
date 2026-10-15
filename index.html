@@ -15,6 +15,13 @@
 <meta property="og:image" content="https://studioduggubi.github.io/molynk/campaign.webp">
 <meta name="twitter:card" content="summary_large_image">
 <script>
+if(new URLSearchParams(location.search).get('contact')==='none') document.documentElement.classList.add('no-contact');
+</script>
+<style>
+.no-contact .contact,.no-contact [data-contact-sms]{display:none!important}
+.no-contact .venue .actions{grid-template-columns:1fr}
+</style>
+<script>
 (function(d){var config={kitId:'rtx7dad',scriptTimeout:3000,async:true},h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,'')+' wf-inactive';},config.scriptTimeout),tk=d.createElement('script'),f=false,s=d.getElementsByTagName('script')[0],a;h.className+=' wf-loading';tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!='complete'&&a!='loaded')return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)})(document);
 </script>
 <style>
@@ -377,7 +384,12 @@
   const profiles = {
     '1': { name: '몰링크 파트너스 이사 주민호', phone: '010-5536-2991', dial: '01055362991' }
   };
-  const profile = profiles[new URLSearchParams(location.search).get('contact')];
+  const contactKey = new URLSearchParams(location.search).get('contact');
+  if (contactKey === 'none') {
+    document.querySelectorAll('.contact, [data-contact-sms]').forEach(node => node.remove());
+    return;
+  }
+  const profile = profiles[contactKey];
   if (!profile) return;
   document.querySelector('[data-contact-name]').textContent = '담당자 : ' + profile.name;
   document.querySelectorAll('[data-contact-phone]').forEach(link => {
