@@ -10,7 +10,7 @@ const quantityLabel=s=>s.n===8?'디저트·과일 996개 + 민트 3종 수량 �
 const countLabel=(amount,conditional=0,unit='개')=>`${amount}${unit}${conditional?` + 확인 후 ${conditional}${unit}`:''}`;
 function jump(n,forceReveal=false){select(Number(n));if(forceReveal||matchMedia('(max-width: 1020px)').matches)document.getElementById('stand-detail').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
 function showImage(key){const p=products[key];document.getElementById('image-name').textContent=p.name;document.getElementById('large-image').src=p.image;document.getElementById('large-image').alt=p.name;document.getElementById('image-quantity').textContent=p.quantity_label;dialog.showModal();}
-function cards(s){return `<div class="product-grid">${s.keys.map(key=>{const p=products[key];return `<article class="product"><button class="product-image" data-image="${p.key}" aria-label="${esc(p.name)} 이미지 확대"><img src="${p.image}" alt="${esc(p.name)}" width="240" height="240"></button><div class="product-copy"><h3>${esc(p.name)}</h3><p class="qty">${esc(p.quantity_label)}</p><p class="product-target">전시·체험 ${countLabel(s.sample_by_key?.[key]??p.samples,p.conditional_samples)} · ${p.purchase_at==='캐셔'?'포장 전달: 캐셔':`구매 포장 ${countLabel(p.purchase,p.conditional_purchase)}`}</p><small>${esc(p.quantity_note)}</small></div></article>`;}).join('')}</div>`;}
+function cards(s){return `<div class="product-grid">${s.keys.map(key=>{const p=products[key];return `<article class="product"><button class="product-image" data-image="${p.key}" aria-label="${esc(p.name)} 이미지 확대"><img src="${p.image}" alt="${esc(p.name)}" width="240" height="240"></button><div class="product-copy"><h3>${esc(p.name)}</h3><p class="qty">발주 수량 · ${esc(p.quantity_label)}</p><p class="product-target">전시·체험 ${countLabel(s.sample_by_key?.[key]??p.samples,p.conditional_samples)} · ${p.purchase_at==='캐셔'?'포장 전달: 캐셔':`구매 포장 ${countLabel(p.purchase,p.conditional_purchase)}`}</p><small>${esc(p.quantity_note)}</small></div></article>`;}).join('')}</div>`;}
 function metrics(s){let buying=countLabel(s.purchase,s.conditional_purchase,'포장');if([1,2,3,4].includes(s.n))buying='캐셔에서 포장 전달';return `<div class="metrics"><div><span>발주 대응 수량</span><b>${esc(quantityLabel(s))}</b></div><div><span>전시·체험용 실물 목표</span><b>${countLabel(s.samples,s.conditional_samples)}</b></div><div><span>직접 고를 구매 포장</span><b>${esc(buying)}</b></div></div>`;}
 function stockDetail(s){const grouped=new Map();for(const key of s.keys){const p=products[key];const loc=String(p.buffer_at);if(!grouped.has(loc))grouped.set(loc,[]);grouped.get(loc).push(p);}return `<div class="stock-connections">${[...grouped.entries()].map(([location,ps])=>`<div class="connection"><b>${/^\d+$/.test(location)?`<button data-jump="${location}">${location}번 하부 보기 ↗</button>`:esc(location)}</b><p>${ps.map(p=>`${esc(p.name)} · ${countLabel(p.buffer,p.conditional_buffer,'판매포장')}`).join('<br>')}</p></div>`).join('')}</div><p class="op-note">하부 목표는 이 상품군의 보충분입니다. 해당 매대의 자체 상품 자리를 먼저 확보하고, 실제 칸에 맞지 않는 위성 보충분은 창고에서 바로 보충합니다.</p>`;}
 function ringLayout(s){
@@ -36,12 +36,12 @@ function select(n,updateHash=true){
  document.getElementById('copy-status').textContent='';
 }
 function changeMode(next){mode=['products','stock','flow'].includes(next)?next:'products';document.querySelectorAll('[data-mode]').forEach(el=>{const yes=el.dataset.mode===mode;el.classList.toggle('active',yes);el.setAttribute('aria-pressed',String(yes));});document.getElementById('map-card').classList.toggle('products-mode',mode==='products');document.getElementById('map-card').classList.toggle('stock-mode',mode==='stock');document.getElementById('map-card').classList.toggle('flow-mode',mode==='flow');select(selected);}
-function loadLocation(){if(['#customer-experience','#product-zoning','#approved-zoning','#event-queue'].includes(location.hash)){select(selected,false);return;}const m=location.hash.match(/^#(?:[ABC]-)?(\d{1,2})(?:-(stock|flow))?$/);selected=m?Number(m[1]):1;changeMode(m&&m[2]?m[2]:'products');}
+function loadLocation(){if(['#customer-experience','#product-zoning','#approved-zoning','#event-queue','#inventory'].includes(location.hash)){select(selected,false);return;}const m=location.hash.match(/^#(?:[ABC]-)?(\d{1,2})(?:-(stock|flow))?$/);selected=m?Number(m[1]):1;changeMode(m&&m[2]?m[2]:'products');}
 for(const s of data.stations){const el=document.querySelector(`.station[data-id="${s.n}"]`);const color=colors[s.zone];el.querySelector('.pin').setAttribute('fill',color);const shape=el.querySelector('path,rect');shape.setAttribute('fill',color);if(shape.hasAttribute('stroke'))shape.setAttribute('stroke',color);el.setAttribute('aria-label',`${s.n}번 ${s.zone} ${s.keys.map(k=>products[k].name).join(', ')}`);}
 document.addEventListener('click',e=>{
  const scenario=e.target.closest('[data-scenario]');if(scenario){applyScenario(scenario.dataset.scenario);return;}
  const route=e.target.closest('[data-route]');if(route){selectRoute(route.dataset.route);return;}
- const reveal=Boolean(e.target.closest('#customer-experience,#product-zoning,#stock-hubs,#representative-notes'));
+ const reveal=Boolean(e.target.closest('#customer-experience,#product-zoning,#stock-hubs,#representative-notes,#inventory'));
  const photo=e.target.closest('[data-image]');if(photo){showImage(photo.dataset.image);return;}
  const jumpLink=e.target.closest('[data-jump]');if(jumpLink){jump(jumpLink.dataset.jump,reveal);return;}
  const pin=e.target.closest('.station');if(pin){jump(pin.dataset.id,reveal);return;}
@@ -69,7 +69,7 @@ function selectRoute(id){
  document.querySelectorAll('#customer-map .station').forEach(el=>el.classList.toggle('route-stop',route.stops.includes(Number(el.dataset.id))));
  document.getElementById('journey-table').innerHTML=route.steps.map((s,i)=>`<tr><td><b>${i+1} · ${esc(s.title)}</b><span class="journey-stations">${s.stations.length?s.stations.map(n=>`<button type="button" class="stand-link" data-jump="${n}">${n}</button>`).join(''):`<b>${esc(s.place_label||'캐셔 · 13번 옆')}</b>`}</span></td><td>${esc(s.feeling)}</td><td>${esc(s.action)}</td><td>${esc(s.display)}</td><td>${esc(s.next_action)}</td></tr>`).join('');
 }
-function scenarioAsset(value){return `${value}${value.includes('?')?'&':'?'}v=20261016-v16`;}
+function scenarioAsset(value){return `${value}${value.includes('?')?'&':'?'}v=20261016-v17`;}
 function shapePoint(x,y){return MolynkZoning.mapPoint(data.layout,x,y);}
 function sectorPath(x,y,r,a,b){
  const [px,py]=shapePoint(x,y),[sx,sy]=shapePoint(x+r*Math.cos(a*Math.PI/180),y+r*Math.sin(a*Math.PI/180)),[ex,ey]=shapePoint(x+r*Math.cos(b*Math.PI/180),y+r*Math.sin(b*Math.PI/180));
@@ -112,9 +112,9 @@ function renderProductZoning(){
   const productsHTML=group.keys.map(key=>{
    const p=products[key];
    const sample=data.stations.filter(s=>group.stations.includes(s.n)).reduce((sum,s)=>sum+(s.sample_by_key?.[key]||0),0);
-   const purchase=p.purchase_at==='캐셔'?'포장 전달: 캐셔':`구매 ${countLabel(p.purchase,p.conditional_purchase,'포장')}`;
+   const purchase=p.purchase_at==='캐셔'?'포장 전달: 캐셔':`구매 포장 목표 ${countLabel(p.purchase,p.conditional_purchase,'포장')}`;
    const restock=p.buffer||p.conditional_buffer?`${/^\d+$/.test(String(p.buffer_at))?p.buffer_at+'번 하부':p.buffer_at} · ${countLabel(p.buffer,p.conditional_buffer,'포장')}`:'창고에서 필요 시 보충';
-   return `<li><button type="button" class="zone-product-photo" data-image="${esc(p.key)}" aria-label="${esc(p.name)} 이미지 확대"><img src="${esc(p.image)}" alt="${esc(p.name)}" width="70" height="70" loading="lazy"></button><div><b>${esc(p.name)}</b><small>전시·체험 ${countLabel(sample,p.conditional_samples)} · ${esc(purchase)}</small><small>보충: ${esc(restock)}</small></div></li>`;
+   return `<li><button type="button" class="zone-product-photo" data-image="${esc(p.key)}" aria-label="${esc(p.name)} 이미지 확대"><img src="${esc(p.image)}" alt="${esc(p.name)}" width="70" height="70" loading="lazy"></button><div><b>${esc(p.name)}</b><p class="zone-order-quantity${p.quantity===null?' pending':''}"><span>발주 수량</span><strong>${esc(p.quantity_label)}</strong></p>${p.status!=='주문행 확인'?`<small class="quantity-status">확인 상태: ${esc(p.status)}</small>`:''}<small>전시·체험 목표 ${countLabel(sample,p.conditional_samples)} · ${esc(purchase)}</small><small>보충 목표: ${esc(restock)}</small></div></li>`;
   }).join('');
   return `<article class="product-zone-card"><div class="product-zone-title"><h3>${esc(group.title)}</h3><span>${group.stations.map(n=>`<button type="button" class="stand-link" data-jump="${n}">${n}</button>`).join('')}</span></div><p>${esc(group.purpose)}</p><ul>${productsHTML}</ul></article>`;
  }).join('');
