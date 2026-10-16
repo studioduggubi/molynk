@@ -69,7 +69,7 @@ function selectRoute(id){
  document.querySelectorAll('#customer-map .station').forEach(el=>el.classList.toggle('route-stop',route.stops.includes(Number(el.dataset.id))));
  document.getElementById('journey-table').innerHTML=route.steps.map((s,i)=>`<tr><td><b>${i+1} · ${esc(s.title)}</b><span class="journey-stations">${s.stations.length?s.stations.map(n=>`<button type="button" class="stand-link" data-jump="${n}">${n}</button>`).join(''):`<b>${esc(s.place_label||'캐셔 · 13번 옆')}</b>`}</span></td><td>${esc(s.feeling)}</td><td>${esc(s.action)}</td><td>${esc(s.display)}</td><td>${esc(s.next_action)}</td></tr>`).join('');
 }
-function scenarioAsset(value){return `${value}${value.includes('?')?'&':'?'}v=20261015-v11`;}
+function scenarioAsset(value){return `${value}${value.includes('?')?'&':'?'}v=20261016-v12`;}
 function shapePoint(x,y){return MolynkZoning.mapPoint(data.layout,x,y);}
 function sectorPath(x,y,r,a,b){
  const [px,py]=shapePoint(x,y),[sx,sy]=shapePoint(x+r*Math.cos(a*Math.PI/180),y+r*Math.sin(a*Math.PI/180)),[ex,ey]=shapePoint(x+r*Math.cos(b*Math.PI/180),y+r*Math.sin(b*Math.PI/180));
@@ -94,13 +94,13 @@ function syncMapGeometry(){
    group.querySelector('title').textContent=`${s.location} · ${s.change}`;
    let label=group.querySelector('.product-zone-label');
    if(!label){label=document.createElementNS('http://www.w3.org/2000/svg','text');label.setAttribute('class','product-zone-label');group.append(label);}
-   label.setAttribute('x',[5,6,7,10,11].includes(s.n)?x-24:x);
-   label.setAttribute('y',[5,6,7,10,11].includes(s.n)?y+5:y+32);
-   label.setAttribute('text-anchor',[5,6,7,10,11].includes(s.n)?'end':'middle');
+   label.setAttribute('x',x+(s.map_label?.dx??([5,6,7,10,11].includes(s.n)?-24:0)));
+   label.setAttribute('y',y+(s.map_label?.dy??([5,6,7,10,11].includes(s.n)?5:32)));
+   label.setAttribute('text-anchor',s.map_label?.anchor??([5,6,7,10,11].includes(s.n)?'end':'middle'));
    label.textContent=s.short_label;
   }
   map.querySelector('.event-zone').toggleAttribute('hidden',!data.scenario.hoop);
-  map.querySelector('.leisure-zone').toggleAttribute('hidden',data.scenario.hoop);
+  map.querySelector('.leisure-zone').toggleAttribute('hidden',data.scenario.hoop||Boolean(data.scenario.corner_is_retail));
  }
 }
 function renderPlacementTable(){
@@ -152,7 +152,7 @@ function applyScenario(id,updateURL=true){
  });
  if(updateURL)history.replaceState(null,'',MolynkZoning.shareURL(location.href,currentScenario));
  if(mapDialog.open)mapDialog.close();if(dialog.open)dialog.close();
- syncMapGeometry();renderQueuePlan();renderPlacementTable();renderProductZoning();renderStockHubs();renderRepresentativeNotes();renderRouteMenu();
+ syncMapGeometry();renderQueuePlan();renderScenarioOperations();renderPlacementTable();renderProductZoning();renderStockHubs();renderRepresentativeNotes();renderRouteMenu();
  document.getElementById('map-card').classList.toggle('products-mode',mode==='products');
  select(selected,false);selectRoute(activeRoute);
  document.querySelectorAll('[data-queue-link]').forEach(link=>link.hidden=!data.queue.enabled);
@@ -195,6 +195,33 @@ function renderQueuePlan(){
  const image=section.querySelector('img');image.src=scenarioAsset(queue.image);
  section.querySelector('[data-queue-image]').href=scenarioAsset(queue.image);
  section.querySelector('[data-queue-pdf]').href=scenarioAsset(queue.pdf);
+}
+
+function renderScenarioOperations(){
+ document.getElementById('scenario-slices-title').textContent=data.scenario.slices_title;
+ document.getElementById('scenario-slices-copy').textContent=data.scenario.slices_copy;
+ document.querySelectorAll('[data-scenario-change]').forEach(card=>{
+  const station=data.stations.find(s=>s.n===Number(card.dataset.scenarioChange));
+  card.querySelector('p').textContent=station.change;
+ });
+ document.querySelectorAll('[data-scenario-exit] p').forEach(p=>{
+  p.textContent=data.scenario.hoop
+   ?'5·6·7번은 앞쪽 조각 매대 모음에, 10·11번은 캐셔 쪽에 배치합니다. 구매 고객은 결제 후, 관람 고객은 캐셔를 거치지 않고 기존 주출구로 나갑니다.'
+   :'앞쪽에는 5·6번, 기존 골대 코너에는 7번을 둡니다. 10·11번과 기존 주출구는 유지하고 골대는 창고에 보관합니다.';
+ });
+ for(const map of document.querySelectorAll('#floor-map,#customer-map')){
+  map.querySelector('.equipment-storage')?.remove();
+  const storage=data.equipment_storage;if(!storage)continue;
+  const [x,y]=shapePoint(...storage.point),ns='http://www.w3.org/2000/svg';
+  const group=document.createElementNS(ns,'g');group.setAttribute('class','equipment-storage');group.setAttribute('pointer-events','none');
+  const add=(name,attrs,text)=>{const e=document.createElementNS(ns,name);for(const [key,value] of Object.entries(attrs))e.setAttribute(key,value);if(text)e.textContent=text;group.append(e);};
+  add('title',{},storage.note);
+  add('rect',{x:x-86,y:y-31,width:172,height:68,rx:9,fill:'#fff7ed','fill-opacity':.96,stroke:'#bd7925','stroke-dasharray':'5 4'});
+  add('text',{x,y:y-8,'text-anchor':'middle','font-size':15,fill:'#995f20','font-weight':700},'미니 골대 · 창고 보관');
+  add('text',{x,y:y+14,'text-anchor':'middle','font-size':11,fill:'#826b53'},'출입문·직원 동선 비우기');
+  add('text',{x,y:y+29,'text-anchor':'middle','font-size':10,fill:'#826b53'},'보관 위치는 현장 조정');
+  map.append(group);
+ }
 }
 
 applyScenario(currentScenario,false);

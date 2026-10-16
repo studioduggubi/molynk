@@ -54,7 +54,7 @@
    {id:'dinosaurs',title:'12번 · 공룡',stations:[12],purpose:'안쪽 전용 구간에서 3형태·2색 비교'},
    {id:'characters',title:'13번 · 파스텔 캐릭터',stations:[13],purpose:'캐셔 옆에서 세 컬렉션 비교 · 하부는 자체 상품 우선'}
   ];
-  return sections.map(group=>({...group,keys:[...new Set(group.stations.flatMap(n=>data.stations.find(s=>s.n===n).keys))]}));
+  return sections.map(group=>({...group,...data.scenario.product_group_overrides?.[group.id],keys:[...new Set(group.stations.flatMap(n=>data.stations.find(s=>s.n===n).keys))]}));
  }
  function forScenario(base,id){
   const key=Object.hasOwn(base.scenarios,id)?id:'with-hoop';
@@ -63,6 +63,7 @@
   data.event={...data.event,enabled:scenario.hoop,hoop:scenario.hoop?base.event.hoop:null};
   if(scenario.journey)data.journey=clone(scenario.journey);
   if(data.queue)data.queue.enabled=Boolean(scenario.hoop);
+  data.equipment_storage=scenario.equipment_storage?clone(scenario.equipment_storage):null;
   for(const s of data.stations)if(scenario.station_overrides?.[s.n])Object.assign(s,scenario.station_overrides[s.n]);
   if(scenario.layout_overrides){
    const changes=clone(scenario.layout_overrides),geometry=data.layout.geometry;
