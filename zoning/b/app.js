@@ -69,7 +69,7 @@ function selectRoute(id){
  document.querySelectorAll('#customer-map .station').forEach(el=>el.classList.toggle('route-stop',route.stops.includes(Number(el.dataset.id))));
  document.getElementById('journey-table').innerHTML=route.steps.map((s,i)=>`<tr><td><b>${i+1} · ${esc(s.title)}</b><span class="journey-stations">${s.stations.length?s.stations.map(n=>`<button type="button" class="stand-link" data-jump="${n}">${n}</button>`).join(''):`<b>${esc(s.place_label||'캐셔 · 13번 옆')}</b>`}</span></td><td>${esc(s.feeling)}</td><td>${esc(s.action)}</td><td>${esc(s.display)}</td><td>${esc(s.next_action)}</td></tr>`).join('');
 }
-function scenarioAsset(value){return `${value}${value.includes('?')?'&':'?'}v=20261016-v15`;}
+function scenarioAsset(value){return `${value}${value.includes('?')?'&':'?'}v=20261016-v16`;}
 function shapePoint(x,y){return MolynkZoning.mapPoint(data.layout,x,y);}
 function sectorPath(x,y,r,a,b){
  const [px,py]=shapePoint(x,y),[sx,sy]=shapePoint(x+r*Math.cos(a*Math.PI/180),y+r*Math.sin(a*Math.PI/180)),[ex,ey]=shapePoint(x+r*Math.cos(b*Math.PI/180),y+r*Math.sin(b*Math.PI/180));
@@ -169,16 +169,20 @@ function renderQueuePlan(){
   if(!enabled)continue;
   const ns='http://www.w3.org/2000/svg',group=document.createElementNS(ns,'g');
   group.setAttribute('class','queue-overlay');group.setAttribute('pointer-events','none');
-  const add=(name,attrs,content)=>{const e=document.createElementNS(ns,name);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(content)e.textContent=content;group.append(e);return e;};
+  const add=(name,attrs,content,parent=group)=>{const e=document.createElementNS(ns,name);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(content)e.textContent=content;parent.append(e);return e;};
   const label=(x,y,content,size=11)=>{const [lx,ly]=shapePoint(x,y);add('text',{x:lx,y:ly,fill:'#9c621b','font-size':size,'text-anchor':'middle'},content);};
   const scale=data.layout.geometry.scale;
-  add('title',{},'외벽 파티션 옆에 여러 명의 사람 실루엣으로 표시한 대기 예시입니다. 발 위치는 기존 구획 네모 안에 들어오도록 합니다.');
-  const [ex,ey]=shapePoint(...queue.front_point),[tx,ty]=shapePoint(...queue.tail_point);
-  add('path',{d:'M'+tx+' '+ty+' L'+ex+' '+ey+' l7 -4 m-7 4 l7 4',fill:'none',stroke:'#bd7925','stroke-width':1.8});
-  const p=queue.silhouette_placement,[x,y]=shapePoint(p.x,p.top);
-  add('image',{class:'queue-people',href:scenarioAsset(queue.people_image),x,y,width:p.width*scale,height:p.height*scale,preserveAspectRatio:'xMidYMid meet'});
-  label(4.8,-1.29,'구획 네모 안에 한 발 이상 · 파티션 옆 한 줄',10);
-  label(queue.front_point[0]-.28,queue.front_point[1]+.03,'줄 앞',10);
+  add('title',{},'파티션 옆 대기줄이 12번 매대 왼쪽에서 꺾여 이벤트존의 다음 차례 자리까지 ㄱ자로 이어집니다. 사람은 이전의 80% 크기입니다.');
+  const points=queue.path_points.map(p=>shapePoint(...p)),[ex,ey]=points[points.length-1];
+  add('path',{d:points.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' '),fill:'none',stroke:'#bd7925','stroke-width':2});
+  add('path',{d:'M'+(ex-4)+' '+(ey-7)+' L'+ex+' '+ey+' L'+(ex+4)+' '+(ey-7),fill:'none',stroke:'#bd7925','stroke-width':2});
+  for(const person of queue.people_sprites){
+   const [rx,ry,w,h]=person.rect,[x,y]=shapePoint(rx,ry);
+   const crop=add('svg',{class:'queue-person',x,y,width:w*scale,height:h*scale,viewBox:person.source_rect.join(' '),overflow:'hidden',preserveAspectRatio:'xMidYMid meet'});
+   add('image',{href:scenarioAsset(queue.people_image),x:0,y:0,width:queue.people_source_size[0],height:queue.people_source_size[1]},null,crop);
+  }
+  label(4.8,-1.29,'파티션 옆 대기 → 왼쪽에서 꺾어 이벤트존으로',10);
+  label(2.18,1.10,'다음 차례',10);
   label(4.8,.56,'12·13번 뒤 외벽 파티션',10);
   map.append(group);
  }
