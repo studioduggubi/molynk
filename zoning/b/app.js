@@ -69,7 +69,7 @@ function selectRoute(id){
  document.querySelectorAll('#customer-map .station').forEach(el=>el.classList.toggle('route-stop',route.stops.includes(Number(el.dataset.id))));
  document.getElementById('journey-table').innerHTML=route.steps.map((s,i)=>`<tr><td><b>${i+1} · ${esc(s.title)}</b><span class="journey-stations">${s.stations.length?s.stations.map(n=>`<button type="button" class="stand-link" data-jump="${n}">${n}</button>`).join(''):`<b>${esc(s.place_label||'캐셔 · 13번 옆')}</b>`}</span></td><td>${esc(s.feeling)}</td><td>${esc(s.action)}</td><td>${esc(s.display)}</td><td>${esc(s.next_action)}</td></tr>`).join('');
 }
-function scenarioAsset(value){return `${value}${value.includes('?')?'&':'?'}v=20261016-v12`;}
+function scenarioAsset(value){return `${value}${value.includes('?')?'&':'?'}v=20261016-v13`;}
 function shapePoint(x,y){return MolynkZoning.mapPoint(data.layout,x,y);}
 function sectorPath(x,y,r,a,b){
  const [px,py]=shapePoint(x,y),[sx,sy]=shapePoint(x+r*Math.cos(a*Math.PI/180),y+r*Math.sin(a*Math.PI/180)),[ex,ey]=shapePoint(x+r*Math.cos(b*Math.PI/180),y+r*Math.sin(b*Math.PI/180));
@@ -164,34 +164,36 @@ function renderQueuePlan(){
  const section=document.getElementById('event-queue');section.hidden=!enabled;
  for(const map of document.querySelectorAll('#floor-map,#customer-map')){
   map.querySelector('.queue-overlay')?.remove();
-  map.setAttribute('viewBox',enabled?'0 -85 965 910':'0 0 965 825');
+  map.setAttribute('viewBox',enabled?'0 -55 965 880':'0 0 965 825');
   map.setAttribute('aria-label',data.scenario.map_caption);
   if(!enabled)continue;
   const ns='http://www.w3.org/2000/svg',group=document.createElementNS(ns,'g');
   group.setAttribute('class','queue-overlay');group.setAttribute('pointer-events','none');
   const add=(name,attrs,content)=>{const e=document.createElementNS(ns,name);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(content)e.textContent=content;group.append(e);return e;};
-  const [x,y,w,h]=queue.exterior_rect,[sx,sy]=shapePoint(x,y),scale=data.layout.geometry.scale;
-  add('rect',{x:sx,y:sy,width:w*scale,height:h*scale,rx:6,fill:'#fff3df',stroke:'#bd7925','stroke-dasharray':'5 4'});
-  const label=(px,py,content,size=11)=>{const [lx,ly]=shapePoint(px,py);add('text',{x:lx,y:ly,fill:'#9c621b','font-size':size,'text-anchor':'middle'},content);};
-  label(x+w/2,y-.17,'외부 대기 후보 · 배정 확인 후 운영');
-  for(let i=0;i<queue.exterior_target_teams;i++){
-   const [cx,cy]=shapePoint(x+w*(i+.5)/queue.exterior_target_teams,y+h/2);
-   add('circle',{cx,cy,r:12,fill:'#bd7925'});
-   add('text',{x:cx,y:cy+4,fill:'white','font-size':12,'text-anchor':'middle'},String(i+1));
+  const label=(x,y,content,size=11)=>{const [lx,ly]=shapePoint(x,y);add('text',{x:lx,y:ly,fill:'#9c621b','font-size':size,'text-anchor':'middle'},content);};
+  const [x,y,w,h]=queue.owned_strip_diagram,[sx,sy]=shapePoint(x,y),scale=data.layout.geometry.scale;
+  add('title',{},'외벽 바깥, 우리 점유 구역 안쪽 띠에 발 위치를 둡니다. 폭은 두 뼘 정도라는 설명을 도식화했으며 실측 치수와 정원은 미확인입니다.');
+  add('rect',{x:sx,y:sy,width:w*scale,height:h*scale,fill:'#f5cb86','fill-opacity':.32});
+  add('line',{x1:sx,y1:sy,x2:sx+w*scale,y2:sy,stroke:'#bd7925','stroke-dasharray':'5 4','stroke-width':1.5});
+  label(x+w/2,-.95,'공용 복도 · 통행 폭 유지',11);
+  label(x+w/2,-.69,'점선: 우리 영역 끝 · 도식',10);
+  // Figures illustrate feet inside the owned strip and bodies projecting past
+  // its edge. Their number and symbol sizes are not a verified queue capacity.
+  for(const [fx,fy] of queue.illustrative_feet){
+   const [cx,cy]=shapePoint(fx,fy-.27);
+   add('circle',{cx,cy,r:16,fill:'#bd7925','fill-opacity':.12,stroke:'#bd7925','stroke-width':1.2});
+   for(const dx of [-.07,.07]){
+    const [px,py]=shapePoint(fx+dx-.035,fy-.09);
+    add('rect',{x:px,y:py,width:.07*scale,height:.18*scale,rx:2,fill:'#bd7925'});
+   }
   }
-  const [ax,ay]=shapePoint(...queue.call_point);
-  label(...queue.call_point,'A 호출');
-  // This arrow stays outside the perimeter. A and B do not imply a doorway.
-  add('path',{d:`M${sx-4} ${ay-4} L${ax+25} ${ay-4} l8 -5 m-8 5 l8 5`,fill:'none',stroke:'#bd7925','stroke-width':2});
-  label(queue.call_point[0]+.3,-.24,'A→B 기존 출입 경로 확인 후',10);
-  const [bx,by]=shapePoint(...queue.next_team_candidate);
-  add('circle',{cx:bx,cy:by,r:10,fill:'white',stroke:'#bd7925','stroke-dasharray':'3 2'});
-  add('text',{x:bx,y:by+3,fill:'#9c621b','font-size':10,'text-anchor':'middle'},'B');
-  label(queue.next_team_candidate[0],queue.next_team_candidate[1]+.29,'다음 1팀 후보',9);
+  const [ex,ey]=shapePoint(...queue.front_point),[tx,ty]=shapePoint(...queue.tail_point);
+  add('path',{d:'M'+tx+' '+ty+' L'+ex+' '+ey+' l7 -4 m-7 4 l7 4',fill:'none',stroke:'#bd7925','stroke-width':1.8});
+  label(queue.front_point[0]-.28,queue.front_point[1]+.03,'줄 앞',10);
+  label(x+w/2,.55,'외벽 밖 · 우리 영역 안쪽 띠에 발 위치',10);
   map.append(group);
  }
  if(!enabled)return;
- section.querySelector('[data-queue-count]').textContent=queue.exterior_target_teams;
  const image=section.querySelector('img');image.src=scenarioAsset(queue.image);
  section.querySelector('[data-queue-image]').href=scenarioAsset(queue.image);
  section.querySelector('[data-queue-pdf]').href=scenarioAsset(queue.pdf);
