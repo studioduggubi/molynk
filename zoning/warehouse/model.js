@@ -18,28 +18,47 @@ const racks=[
  {id:'B2',x:2.80,y:6.45,w:.7,d:1.3,long:'y',kind:'other',label:'기타 상품 · 예비'}
 ].map(r=>({...r,h:1.95}));
 const zones={table:{x:.04,y:1.75,w:.55,d:1.2,h:.85},hoop:{x:.04,y:7.15,w:1.05,d:1.05,h:1.8},path:[[0,1.1],[.95,1.1],[.95,2.7],[1.02,3.8],[1.05,4.8],[1.10,5.6],[1.65,6.6],[1.85,7.4]]};
-const defaults={boxW:600,boxD:400,boxH:400,count:200,showBoxes:true,showStructure:true,storeHoop:true,reserveOther:true};
+const floorAreas=[
+ {id:'A1',x:1.74,y:.04,w:1.76,d:.7,long:'x',kind:'cake',label:'케이크 · 1·2·4번'},
+ {id:'A2',x:2.65,y:.82,w:.85,d:1.45,long:'y',kind:'cake',label:'케이크 바닥 적재'},
+ {id:'A3',x:.04,y:5.60,w:.85,d:1.5,long:'y',kind:'cake',label:'케이크 바닥 적재'},
+ {id:'A4',x:1.55,y:7.70,w:1.95,d:.84,long:'x',kind:'cake',label:'케이크 바닥 적재'},
+ {id:'A5',x:.04,y:3.02,w:.5,d:2.5,long:'y',kind:'cake',label:'벽 쪽 한 줄 적재'},
+ {id:'B1',x:.04,y:.04,w:1.5,d:.6,long:'x',kind:'other',label:'기타 상품 · 개봉·피킹'},
+ {id:'B2',x:2.66,y:6.40,w:.84,d:1.28,long:'y',kind:'other',label:'기타 상품 · 바닥 적재'}
+];
+const defaults={boxW:600,boxD:400,boxH:400,count:200,storageMode:'racks',stackLayers:4,showBoxes:true,showStructure:true,storeHoop:true,reserveOther:true};
 function pack(r,config){
  const a=config.boxW/1000,b=config.boxD/1000,h=config.boxH/1000;
  const w=r.w-.08,d=r.d-.06,usableHeight=r.h-.12,step=h+.05;
  const fits=(x,y)=>[Math.max(0,Math.floor((w+1e-8)/x)),Math.max(0,Math.floor((d+1e-8)/y))];
  const normal=fits(a,b),turned=fits(b,a);const rotated=turned[0]*turned[1]>normal[0]*normal[1];
  const [nx,ny]=rotated?turned:normal,levels=Math.max(0,Math.min(12,Math.floor((usableHeight+.05+1e-8)/step)));
- return {nx,ny,levels,rotated,bw:rotated?b:a,bd:rotated?a:b,bh:h,step,capacity:nx*ny*levels};
+ return {nx,ny,levels,rotated,bw:rotated?b:a,bd:rotated?a:b,bh:h,step,capacity:nx*ny*levels,baseZ:.12,insetX:.04,insetY:.03,storageType:'racks'};
+}
+function packFloor(r,config){
+ const a=config.boxW/1000,b=config.boxD/1000,h=config.boxH/1000,w=r.w-.02,d=r.d-.02;
+ const fits=(x,y)=>[Math.max(0,Math.floor((w+1e-8)/x)),Math.max(0,Math.floor((d+1e-8)/y))];
+ const normal=fits(a,b),turned=fits(b,a),rotated=turned[0]*turned[1]>normal[0]*normal[1];
+ const [nx,ny]=rotated?turned:normal,levels=Math.min(config.stackLayers,Math.floor((2+1e-8)/h));
+ return {nx,ny,levels,rotated,bw:rotated?b:a,bd:rotated?a:b,bh:h,step:h,capacity:nx*ny*levels,baseZ:0,insetX:.01,insetY:.01,storageType:'floor'};
 }
 function calculate(config={}){
  const c={...defaults,...config};
  for(const name of ['boxW','boxD','boxH'])if(!Number.isFinite(c[name])||c[name]<100||c[name]>1500)throw Error('박스 치수는 100~1,500mm 범위로 입력해주세요.');
  if(!Number.isInteger(c.count)||c.count<0||c.count>5000)throw Error('박스 수는 0~5,000의 정수로 입력해주세요.');
- let remaining=c.count;const allocation=racks.map(r=>{
-  const p=pack(r,c),reserved=c.reserveOther&&r.kind==='other';
+ if(!['racks','floor'].includes(c.storageMode))throw Error('보관 방식을 선택해주세요.');
+ if(!Number.isInteger(c.stackLayers)||c.stackLayers<1||c.stackLayers>6)throw Error('적재 단수는 1~6단 범위로 입력해주세요.');
+ const areas=c.storageMode==='floor'?floorAreas:racks;
+ let remaining=c.count;const allocation=areas.map(r=>{
+  const p=c.storageMode==='floor'?packFloor(r,c):pack(r,c),reserved=c.reserveOther&&r.kind==='other';
   const placed=reserved?0:Math.min(remaining,p.capacity);remaining-=placed;
-  return {...r,...p,reserved,placed};
+  return {...r,...p,h:c.storageMode==='floor'?p.levels*p.bh:r.h,reserved,placed};
  });
  const cakeCapacity=allocation.filter(r=>!r.reserved).reduce((s,r)=>s+r.capacity,0);
  return {config:c,racks:allocation,cakeCapacity,placed:c.count-remaining,overflow:remaining,otherCapacity:allocation.filter(r=>r.reserved).reduce((s,r)=>s+r.capacity,0),cakeVolume:c.count*c.boxW*c.boxD*c.boxH/1e9,floorArea:room.width*room.length,grossArea:room.outerWidth*room.outerLength,minAisle:room.curve.x-room.curve.r-(.04+.5)};
 }
 function intersects(a,b){return a.x<b.x+b.w-1e-8&&a.x+a.w>b.x+1e-8&&a.y<b.y+b.d-1e-8&&a.y+a.d>b.y+1e-8;}
 function hitsCurve(r){const c=room.curve;const x=Math.max(r.x,Math.min(c.x,r.x+r.w)),y=Math.max(r.y,Math.min(c.y,r.y+r.d));return Math.hypot(x-c.x,y-c.y)<c.r-1e-8;}
-const api={room,fixed,racks,zones,defaults,pack,calculate,intersects,hitsCurve};if(typeof module!=='undefined')module.exports=api;else root.WarehouseModel=api;
+const api={room,fixed,racks,floorAreas,zones,defaults,pack,packFloor,calculate,intersects,hitsCurve};if(typeof module!=='undefined')module.exports=api;else root.WarehouseModel=api;
 })(typeof window==='undefined'?globalThis:window);
