@@ -69,7 +69,7 @@ function selectRoute(id){
  document.querySelectorAll('#customer-map .station').forEach(el=>el.classList.toggle('route-stop',route.stops.includes(Number(el.dataset.id))));
  document.getElementById('journey-table').innerHTML=route.steps.map((s,i)=>`<tr><td><b>${i+1} · ${esc(s.title)}</b><span class="journey-stations">${s.stations.length?s.stations.map(n=>`<button type="button" class="stand-link" data-jump="${n}">${n}</button>`).join(''):`<b>${esc(s.place_label||'캐셔 · 13번 옆')}</b>`}</span></td><td>${esc(s.feeling)}</td><td>${esc(s.action)}</td><td>${esc(s.display)}</td><td>${esc(s.next_action)}</td></tr>`).join('');
 }
-function scenarioAsset(value){return `${value}${value.includes('?')?'&':'?'}v=20261016-v14`;}
+function scenarioAsset(value){return `${value}${value.includes('?')?'&':'?'}v=20261016-v15`;}
 function shapePoint(x,y){return MolynkZoning.mapPoint(data.layout,x,y);}
 function sectorPath(x,y,r,a,b){
  const [px,py]=shapePoint(x,y),[sx,sy]=shapePoint(x+r*Math.cos(a*Math.PI/180),y+r*Math.sin(a*Math.PI/180)),[ex,ey]=shapePoint(x+r*Math.cos(b*Math.PI/180),y+r*Math.sin(b*Math.PI/180));
@@ -164,7 +164,7 @@ function renderQueuePlan(){
  const section=document.getElementById('event-queue');section.hidden=!enabled;
  for(const map of document.querySelectorAll('#floor-map,#customer-map')){
   map.querySelector('.queue-overlay')?.remove();
-  map.setAttribute('viewBox',enabled?'0 -30 965 855':'0 0 965 825');
+  map.setAttribute('viewBox',enabled?'0 -65 965 890':'0 0 965 825');
   map.setAttribute('aria-label',data.scenario.map_caption);
   if(!enabled)continue;
   const ns='http://www.w3.org/2000/svg',group=document.createElementNS(ns,'g');
@@ -172,18 +172,12 @@ function renderQueuePlan(){
   const add=(name,attrs,content)=>{const e=document.createElementNS(ns,name);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(content)e.textContent=content;group.append(e);return e;};
   const label=(x,y,content,size=11)=>{const [lx,ly]=shapePoint(x,y);add('text',{x:lx,y:ly,fill:'#9c621b','font-size':size,'text-anchor':'middle'},content);};
   const scale=data.layout.geometry.scale;
-  add('title',{},'외벽 파티션 옆에 붙여 대기하며 기존 구획 네모 안에 한 발 이상 들어오도록 안내합니다.');
-  for(const person of queue.illustrative_people){
-   const [cx,cy]=shapePoint(person.x,person.body_y);
-   add('circle',{cx,cy,r:16,fill:'#bd7925','fill-opacity':.12,stroke:'#bd7925','stroke-width':1.2});
-   for(const foot of person.feet){
-    const [px,py]=shapePoint(person.x+foot.dx-.035,foot.y-.09);
-    add('rect',{x:px,y:py,width:.07*scale,height:.18*scale,rx:2,fill:'#bd7925',stroke:'white','stroke-width':.5});
-   }
-  }
+  add('title',{},'외벽 파티션 옆에 여러 명의 사람 실루엣으로 표시한 대기 예시입니다. 발 위치는 기존 구획 네모 안에 들어오도록 합니다.');
   const [ex,ey]=shapePoint(...queue.front_point),[tx,ty]=shapePoint(...queue.tail_point);
   add('path',{d:'M'+tx+' '+ty+' L'+ex+' '+ey+' l7 -4 m-7 4 l7 4',fill:'none',stroke:'#bd7925','stroke-width':1.8});
-  label(4.8,-.66,'구획 네모 안에 한 발 이상 · 파티션 옆 한 줄',10);
+  const p=queue.silhouette_placement,[x,y]=shapePoint(p.x,p.top);
+  add('image',{class:'queue-people',href:scenarioAsset(queue.people_image),x,y,width:p.width*scale,height:p.height*scale,preserveAspectRatio:'xMidYMid meet'});
+  label(4.8,-1.29,'구획 네모 안에 한 발 이상 · 파티션 옆 한 줄',10);
   label(queue.front_point[0]-.28,queue.front_point[1]+.03,'줄 앞',10);
   label(4.8,.56,'12·13번 뒤 외벽 파티션',10);
   map.append(group);
