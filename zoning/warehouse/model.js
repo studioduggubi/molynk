@@ -27,7 +27,8 @@ const floorAreas=[
  {id:'B1',x:.04,y:.04,w:1.5,d:.6,long:'x',kind:'other',label:'기타 상품 · 개봉·피킹'},
  {id:'B2',x:2.66,y:6.40,w:.84,d:1.28,long:'y',kind:'other',label:'기타 상품 · 바닥 적재'}
 ];
-const defaults={boxW:600,boxD:400,boxH:400,count:200,storageMode:'racks',stackLayers:4,showBoxes:true,showStructure:true,storeHoop:true,reserveOther:true};
+const shipment={date:'2026-10-19',firstCartons:253,firstWeightKg:1500,firstShareApprox:.8,secondCartons:null,shareBasis:'박스 수 기준인지 미확인',source:'사용자가 제공한 출고 담당자 대화 캡처'};
+const defaults={boxW:600,boxD:400,boxH:400,count:253,storageMode:'racks',stackLayers:4,showBoxes:true,showStructure:true,storeHoop:true,reserveOther:false};
 function pack(r,config){
  const a=config.boxW/1000,b=config.boxD/1000,h=config.boxH/1000;
  const w=r.w-.08,d=r.d-.06,usableHeight=r.h-.12,step=h+.05;
@@ -56,9 +57,9 @@ function calculate(config={}){
   return {...r,...p,h:c.storageMode==='floor'?p.levels*p.bh:r.h,reserved,placed};
  });
  const cakeCapacity=allocation.filter(r=>!r.reserved).reduce((s,r)=>s+r.capacity,0);
- return {config:c,racks:allocation,cakeCapacity,placed:c.count-remaining,overflow:remaining,otherCapacity:allocation.filter(r=>r.reserved).reduce((s,r)=>s+r.capacity,0),cakeVolume:c.count*c.boxW*c.boxD*c.boxH/1e9,floorArea:room.width*room.length,grossArea:room.outerWidth*room.outerLength,minAisle:room.curve.x-room.curve.r-(.04+.5)};
+ return {config:c,racks:allocation,cakeCapacity,totalCapacity:cakeCapacity,externalNeeded:remaining,placed:c.count-remaining,overflow:remaining,otherCapacity:allocation.filter(r=>r.reserved).reduce((s,r)=>s+r.capacity,0),cakeVolume:c.count*c.boxW*c.boxD*c.boxH/1e9,floorArea:room.width*room.length,grossArea:room.outerWidth*room.outerLength,minAisle:room.curve.x-room.curve.r-(.04+.5)};
 }
 function intersects(a,b){return a.x<b.x+b.w-1e-8&&a.x+a.w>b.x+1e-8&&a.y<b.y+b.d-1e-8&&a.y+a.d>b.y+1e-8;}
 function hitsCurve(r){const c=room.curve;const x=Math.max(r.x,Math.min(c.x,r.x+r.w)),y=Math.max(r.y,Math.min(c.y,r.y+r.d));return Math.hypot(x-c.x,y-c.y)<c.r-1e-8;}
-const api={room,fixed,racks,floorAreas,zones,defaults,pack,packFloor,calculate,intersects,hitsCurve};if(typeof module!=='undefined')module.exports=api;else root.WarehouseModel=api;
+const api={room,shipment,fixed,racks,floorAreas,zones,defaults,pack,packFloor,calculate,intersects,hitsCurve};if(typeof module!=='undefined')module.exports=api;else root.WarehouseModel=api;
 })(typeof window==='undefined'?globalThis:window);

@@ -57,7 +57,7 @@ function createRenderer(canvas){
    }
    if(result.config.showBoxes){
     for(let k=0;k<r.placed;k++){const perLevel=p.nx*p.ny,level=Math.floor(k/perLevel),row=Math.floor((k%perLevel)/p.nx),col=k%p.nx;
-     box(r.x+p.insetX+col*p.bw,r.y+p.insetY+row*p.bd,p.baseZ+level*p.step,p.bw-.006,p.bd-.006,p.bh-(p.storageType==='floor'?.006:0),'#c89b70');
+     box(r.x+p.insetX+col*p.bw,r.y+p.insetY+row*p.bd,p.baseZ+level*p.step,p.bw-.006,p.bd-.006,p.bh-(p.storageType==='floor'?.006:0),r.kind==='other'?'#759c91':'#c89b70');
     }
     if(r.reserved){for(let k=0;k<3;k++){const horizontal=r.long==='x',x=r.x+.06+(horizontal?k*.4:0),y=r.y+.06+(horizontal?0:k*.34);box(x,y,p.storageType==='floor'?0:.12,horizontal?.34:.42,horizontal?.38:.28,.22,'#759c91');}}
    }
