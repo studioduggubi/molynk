@@ -13,9 +13,10 @@ function update(){
  el('capacity-label').textContent=floor?'박스 적재 가능 · 계산값':'선반 배치 가능 · 계산값';
  el('view-title').textContent=floor?'랙 없이 박스로만 쌓는 안':'기둥·곡면 외장을 보존한 선반 안';
  el('box-size').innerHTML=`${fmt(config.boxW)} × ${fmt(config.boxD)} × ${fmt(config.boxH)} <small>mm</small>`;
- el('placed').innerHTML=`${fmt(result.placed)} <small>/ ${fmt(config.count)}박스</small>`;el('overflow').innerHTML=`${fmt(result.externalNeeded)} <small>박스 · 외부 보관 검토</small>`;
+ el('placed').innerHTML=`${fmt(result.placed)} <small>/ ${fmt(config.count)}박스</small>`;el('overflow').innerHTML=`${fmt(result.externalNeeded)} <small>박스 · 트럭 보관 검토</small>`;
+ el('truck-count').textContent=fmt(result.externalNeeded)+'박스';
  el('onsite-count').textContent=fmt(result.placed)+'박스';el('external-count').textContent=fmt(result.externalNeeded)+'박스';
- el('allocation-note').textContent=`계산 물량 ${fmt(config.count)}박스 = 현장 ${fmt(result.placed)} + 외부 ${fmt(result.externalNeeded)}. 모든 박스를 입력 규격으로 본 비교안이며, 실제 상품별 반입량은 패킹리스트 확인 후 정합니다.`;
+ el('allocation-note').textContent=`계산 물량 ${fmt(config.count)}박스 = 현장 ${fmt(result.placed)} + 외부 ${fmt(result.externalNeeded)}. 모든 박스를 입력 규격으로 본 비교안이며, 실제 상품별 반입량은 패킹리스트 확인 후 정합니다. 외부 물량은 지하주차장 트럭 보관 후보이며 수용 가능 여부는 확인 전입니다.`;
  const fit=result.overflow===0;document.querySelector('.result-card').classList.toggle('fit',fit);
  el('result-title').textContent=`현장 ${fmt(result.placed)} · 외부 ${fmt(result.externalNeeded)}박스`;
  el('result-copy').textContent=`${floor?'바닥 적재 구획':'선반'}의 계산 수용량은 ${fmt(result.totalCapacity)}박스입니다. ${config.reserveOther?'B1·B2는 미확인 물량을 위한 예비 구획으로 비워두었습니다.':'A·B 보관 구획을 모두 계산에 포함했습니다.'} 입력 박스의 외형 부피 합계는 ${result.cakeVolume.toFixed(1)}㎥입니다. ${floor?'적재 단수는 비교 가정이며 허용 적재 단수 확인 후 정합니다.':'실제 박스와 선반 내경·무게를 확인해 확정합니다.'} 현장은 상품군별 개봉·보충 재고, 외부는 미개봉 예비 재고로 나누는 계획입니다.`;
@@ -27,8 +28,8 @@ function update(){
  el('schedule-title').textContent=floor?'바닥 구획별 적재·수량':'선반별 배치·수량';
  el('dimension-heading').textContent=floor?'바닥 구획 · mm':'선반 외경 · mm';
  el('rack-table').innerHTML=result.racks.map(r=>`<tr><td><b>${r.id}</b></td><td>${r.label}${r.reserved?'<small>예비 구획으로 비워둠</small>':'<small>상품별 실제 배정은 확인 전</small>'}</td><td>${Math.round(r.w*1000)} × ${Math.round(r.d*1000)}${floor?`<small>적재 높이 ${Math.round(r.h*1000)}mm</small>`:' × 1950'}</td><td>${r.nx*r.ny}박스/${floor?'층':'단'} × ${r.levels}${floor?'층':'단'}<small>총 ${r.capacity}박스 · 동일 크기 가정</small></td><td>${r.reserved?'예비 구획':r.placed+'박스'}</td></tr>`).join('');
- el('preview-download').href=(floor?'warehouse-floor-overview.webp':'warehouse-overview.webp')+'?v=20261019-w3';
- el('model-download').href=(floor?'warehouse-floor-layout.glb':'warehouse-layout.glb')+'?v=20261019-w3';
+ el('preview-download').href=(floor?'warehouse-floor-overview.webp':'warehouse-overview.webp')+'?v=20261019-w4';
+ el('model-download').href=(floor?'warehouse-floor-layout.glb':'warehouse-layout.glb')+'?v=20261019-w4';
  el('selection').textContent=floor?'A·B 구획에 입고 박스를 배치한 크기 비교안입니다. 실제 상품별 위치는 확인 전이며 작업대와 골대 자리는 비워둡니다.':'A·B 선반을 모두 사용한 입고 물량 비교안입니다. 구획을 누르면 수량을 볼 수 있어요.';
  draw();
 }
