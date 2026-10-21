@@ -44,9 +44,9 @@
  function productGroups(data){
   const sections=[
    {id:'central',title:'중앙 케이크·젤라또',stations:[1,2,3,4],purpose:'입구에서 발견하고 뒷면에서 체험 · 포장은 캐셔에서 전달'},
-   {id:'noj',title:'5번 · NO.J',stations:[5],purpose:'조각 매대 위쪽 · 안쪽을 향해 3종 비교'},
+   {id:'noj',title:'5번 · 메론번',stations:[5],purpose:'조각 매대 위쪽 · 안쪽을 향해 3종 비교'},
    {id:'small-bread',title:'6번 · 작은 빵',stations:[6],purpose:'조각 매대 가운데 · 대표 샘플과 옵션 포장 선택'},
-   {id:'tonki',title:'7번 · Tonki Cafe',stations:[7],purpose:'조각 매대 아래쪽 · 9번·입구 쪽에서 캐릭터 선택'},
+   {id:'tonki',title:'7번 · 딤섬 라인업',stations:[7],purpose:'조각 매대 아래쪽 · 9번·입구 쪽에서 캐릭터 선택'},
    {id:'desserts',title:'8번 · 디저트·과일',stations:[8],purpose:'입구 가까이에서 색과 모양으로 첫 선택'},
    {id:'bread',title:'9번 · 생식빵·토끼빵',stations:[9],purpose:'모양·색상·옵션을 비교하는 빵 구간'},
    {id:'cashier-bread',title:'10번 · 토스트·크루아상·난 빵',stations:[10],purpose:'캐셔 쪽으로 올린 벽면에서 빵 비교 · 6번 보충 연결'},
