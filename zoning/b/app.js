@@ -124,7 +124,6 @@ function renderStockHubs(){
   const satelliteStations=[...new Set(h.satellite_keys.map(k=>products[k].station))];
   return `<article class="hub"><h3><button type="button" class="stand-link" data-jump="${h.n}">${h.n}</button> 하부 · 목표 상한 ${h.own+h.satellite+h.conditional}판매포장</h3><p class="own"><b>자체 상품 먼저</b><br>${h.own}포장${h.conditional?' + 확인 후 '+h.conditional+'판매단위':''}<br><small>${h.own_keys.map(k=>esc(products[k].name)).join(' · ')}</small></p><p class="satellite"><b>남는 구획에 위성 보충분</b><br>${h.satellite?`${h.satellite}포장 · ${satelliteStations.join('·')}번 보충`:'위성 보충분 없음'}</p><p class="caption">목표 상한이며 실제 수납 수용량은 아닙니다. 위성분이 맞지 않으면 창고에서 바로 보충합니다.</p></article>`;
  }).join('');
- document.getElementById('warehouse-buffer').innerHTML=`<h3>창고 직접 보충</h3><p>${data.warehouse_buffer_keys.map(k=>{const p=products[k];return `${esc(p.name)} · ${countLabel(p.buffer,p.conditional_buffer,'포장')} → ${p.station}번`;}).join('<br>')}</p><p class="caption">7번 Tonki 보충분은 창고에서 디자인별로 관리하고, 13번 하부는 13번 자체 상품을 우선합니다.</p>`;
 }
 function renderRepresentativeNotes(){
  document.getElementById('representative-notes').innerHTML=data.stations.map(s=>{const p=products[s.representative_key];return `<button class="representative-note" type="button" data-jump="${s.n}"><img src="${esc(p.image)}" width="240" height="240" alt="${esc(p.name)}" loading="lazy"><span><b>${s.n} · ${esc(p.name)}</b><small>${esc(s.location)}<br>${esc(s.change)}</small></span></button>`;}).join('');
