@@ -5,7 +5,7 @@
   const resultDialog=$('result-dialog'),historyDialog=$('history-dialog'),motion=matchMedia('(prefers-reduced-motion: reduce)');
   const KEY='molynk-lucky-spin-v1',SOUND_KEY='molynk-lucky-spin-sound';
   const fresh=()=>({version:1,layoutVersion:Core.LAYOUT_VERSION,sequence:0,counts:{cake:0,gelato:0,laugen:0,again:0},history:[],active:null,rotation:0});
-  let state=fresh(),busy=false,storageReady=true,audio=null,sound=true,animationFrame=null;
+  let state=fresh(),busy=false,storageReady=true,audio=null,sound=true,animationFrame=null,celebrationTimer=null;
   try{
     const raw=localStorage.getItem(KEY);
     if(raw){
@@ -45,15 +45,15 @@
     const slices=SEGMENTS.map(s=>{
       const start=s.start/10000*360,end=s.end/10000*360,mid=(start+end)/2,p1=point(260,start),p2=point(260,end),center=point(s.prize==='cake'?205:183,mid);
       const color=s.prize==='again'?(s.index%3===0?'#f8d3e1':'#fbe7ee'):colors[s.prize];
-      const path=`<path class="${s.prize==='cake'?'cake-jackpot-wedge':'prize-wedge'}" d="M260 260 L${p1.join(' ')} A260 260 0 ${end-start>180?1:0} 1 ${p2.join(' ')} Z" fill="${color}" stroke="${s.prize==='cake'?'#af6b0c':'#fff9f0'}" stroke-width="${s.prize==='cake'?3:2.5}"/>`;
+      const path=`<path class="${s.prize==='cake'?'cake-jackpot-wedge':'prize-wedge'}" d="M260 260 L${p1.join(' ')} A260 260 0 ${end-start>180?1:0} 1 ${p2.join(' ')} Z" fill="${color}" stroke="${s.prize==='cake'?'#ffd46b':'#fff9f0'}" stroke-width="${s.prize==='cake'?4:2.5}"/>`;
       let label;
-      if(s.prize==='cake')label='<text y="-13" font-size="21" fill="#fffdf2" stroke="#9d5c06" stroke-width=".7">✦</text><text y="13" font-size="13" font-weight="800" fill="#743b00">2%</text>';
+      if(s.prize==='cake')label='<text y="-15" font-size="23" fill="#ffd778">✦</text><text y="13" font-size="14" font-weight="800" fill="#ffffff" stroke="#ffffff" stroke-width=".35">2%</text>';
       else if(s.prize==='again')label='<text y="-15" font-size="38" fill="#b47691">♡</text><text y="28" font-size="27" font-weight="800" fill="#975c76">다음 기회에</text>';
       else if(s.prize==='gelato')label=`<image href="${imageFor(s)}" x="-83" y="-78" width="166" height="166"/><rect x="-53" y="36" width="106" height="39" rx="14" fill="#fff9f3" fill-opacity=".94"/><text y="64" font-size="27" font-weight="800" fill="#983b60">젤라토</text>`;
       else label=`<image href="${imageFor(s)}" x="-82" y="-94" width="164" height="154" preserveAspectRatio="xMidYMid meet"/><rect x="-54" y="35" width="108" height="40" rx="14" fill="#fbfff7" fill-opacity=".95"/><text y="64" font-size="27" font-weight="800" fill="#4e6b43">라우겐</text>`;
       return path+`<g transform="translate(${center.join(' ')}) rotate(${mid})" text-anchor="middle" font-family="Paperlogy,Pretendard,sans-serif">${label}</g>`;
     }).join('');
-    $('wheel-svg').innerHTML='<defs><linearGradient id="cake-gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff6aa"/><stop offset=".5" stop-color="#ffc83d"/><stop offset="1" stop-color="#f09613"/></linearGradient></defs>'+slices+'<circle cx="260" cy="260" r="101" fill="#ffe5a1" stroke="#fff9ef" stroke-width="3"/>';
+    $('wheel-svg').innerHTML='<defs><linearGradient id="cake-gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#68123b"/><stop offset=".5" stop-color="#31051f"/><stop offset="1" stop-color="#17091e"/></linearGradient></defs>'+slices+'<circle cx="260" cy="260" r="101" fill="#31051f" stroke="#ffd778" stroke-width="3"/>';
     $('wheel-lights').innerHTML=Array.from({length:42},(_,i)=>{const a=i/42*Math.PI*2;return `<i class="wheel-light" style="--x:${Math.cos(a)*46.9}%;--y:${Math.sin(a)*46.9}%"></i>`;}).join('');
   }
   function updateSoundButton(){const b=$('sound-button');b.setAttribute('aria-pressed',String(sound));b.setAttribute('aria-label',sound?'효과음 끄기':'효과음 켜기');b.querySelector('span').textContent=sound?'소리 켜짐':'소리 꺼짐';}
@@ -65,13 +65,50 @@
     if(!sound||!audio||audio.state!=='running')return;
     try{const osc=audio.createOscillator(),gain=audio.createGain(),start=audio.currentTime+delay;osc.type=type;osc.frequency.setValueAtTime(frequency,start);gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(volume,start+.005);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);osc.connect(gain);gain.connect(audio.destination);osc.start(start);osc.stop(start+duration+.015);osc.onended=()=>{osc.disconnect();gain.disconnect();};}catch(error){}
   }
-  function celebration(won){
-    if(won){[523.25,659.25,783.99,1046.5].forEach((f,i)=>note(f,.2,.045,i*.1));if(navigator.vibrate)navigator.vibrate([40,40,60]);}
-    else [659.25,587.33,523.25].forEach((f,i)=>note(f,.13,.025,i*.1));
-    if(!won||motion.matches)return;
-    const layer=$('confetti-layer');layer.replaceChildren();const palette=['#e986aa','#f5c861','#b7d6b4','#fff3df','#cc80ab'];
-    for(let i=0;i<65;i++){const el=document.createElement('i');el.className='confetti';const a=-Math.PI+Math.random()*Math.PI,force=180+Math.random()*400;el.style.setProperty('--dx',Math.cos(a)*force+'px');el.style.setProperty('--dy',(Math.sin(a)*force+360)+'px');el.style.setProperty('--rot',(Math.random()*1000-500)+'deg');el.style.setProperty('--color',palette[i%palette.length]);el.style.animationDelay=Math.random()*.18+'s';layer.append(el);}
-    setTimeout(()=>layer.replaceChildren(),2800);
+  function fireworkSound(delay=0){
+    if(!sound||!audio||audio.state!=='running')return;
+    try{
+      const duration=.32,buffer=audio.createBuffer(1,Math.ceil(audio.sampleRate*duration),audio.sampleRate),samples=buffer.getChannelData(0);
+      for(let i=0;i<samples.length;i++)samples[i]=(Math.random()*2-1)*Math.pow(1-i/samples.length,2);
+      const source=audio.createBufferSource(),gain=audio.createGain(),filter=audio.createBiquadFilter(),start=audio.currentTime+delay;
+      source.buffer=buffer;filter.type='lowpass';filter.frequency.setValueAtTime(1900,start);gain.gain.setValueAtTime(.085,start);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
+      source.connect(filter);filter.connect(gain);gain.connect(audio.destination);source.start(start);source.stop(start+duration);
+      source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();};
+    }catch(error){}
+  }
+  function clearCelebration(){
+    if(celebrationTimer!==null){clearTimeout(celebrationTimer);celebrationTimer=null;}
+    $('confetti-layer').replaceChildren();
+  }
+  function celebration(prizeId){
+    clearCelebration();
+    const won=prizeId!=='again',jackpot=prizeId==='cake';
+    if(!won){[659.25,587.33,523.25].forEach((f,i)=>note(f,.13,.025,i*.1));return;}
+    // Synthesized locally, so the fanfare and firework pops also work offline.
+    const melody=[[523.25,0,.12],[659.25,.12,.12],[783.99,.24,.18],[1046.5,.44,.2],[783.99,.68,.13],[1046.5,.84,.55]];
+    melody.forEach(([f,delay,duration])=>{note(f,duration,.07,delay,'triangle');note(f*2,duration,.018,delay,'sine');});
+    [523.25,659.25,783.99].forEach(f=>note(f,.65,.024,.84,'sine'));
+    fireworkSound(0);fireworkSound(.55);if(jackpot){fireworkSound(1.15);[1046.5,1318.51,1567.98].forEach((f,i)=>note(f,.35,.045,1.45+i*.12,'triangle'));}
+    if(navigator.vibrate)navigator.vibrate(jackpot?[70,60,70,60,140]:[50,50,100]);
+    if(motion.matches)return;
+    const layer=$('confetti-layer'),palette=['#f36d9e','#ffd56b','#b4d3a1','#fff4c6','#cc88df','#ff9abb'];
+    layer.dataset.prize=prizeId;
+    // The layer lives inside the modal's top layer, so fireworks stay visible above its backdrop.
+    for(let i=0;i<(jackpot?160:110);i++){
+      const el=document.createElement('i'),side=i%2===0?-1:1,angle=-Math.PI/2-side*(.25+Math.random()*.85),force=280+Math.random()*430;
+      el.className='confetti celebration-confetti';el.style.left=side<0?'8%':'92%';el.style.top='76%';
+      el.style.setProperty('--dx',Math.cos(angle)*force+'px');el.style.setProperty('--dy',Math.sin(angle)*force+'px');el.style.setProperty('--rot',(Math.random()*1500-750)+'deg');el.style.setProperty('--color',palette[i%palette.length]);
+      el.style.animationDelay=(Math.random()*.65)+'s';layer.append(el);
+    }
+    const bursts=jackpot?[[20,26,0],[79,23,.25],[52,14,.6],[28,61,.95],[78,58,1.25]]:[[22,25,0],[78,29,.3],[51,17,.7]];
+    for(const [x,y,delay] of bursts){
+      const ring=document.createElement('i');ring.className='firework-ring';ring.style.left=x+'%';ring.style.top=y+'%';ring.style.animationDelay=delay+'s';layer.append(ring);
+      for(let i=0;i<20;i++){
+        const spark=document.createElement('i'),angle=i/20*Math.PI*2,distance=65+Math.random()*80;
+        spark.className='firework-spark';spark.style.left=x+'%';spark.style.top=y+'%';spark.style.setProperty('--fx',Math.cos(angle)*distance+'px');spark.style.setProperty('--fy',Math.sin(angle)*distance+'px');spark.style.setProperty('--color',palette[i%palette.length]);spark.style.animationDelay=delay+'s';layer.append(spark);
+      }
+    }
+    celebrationTimer=setTimeout(clearCelebration,4400);
   }
   function showResult(celebrate=false){
     const round=state.active;if(!round)return;const prize=PRIZES[round.prize],won=prize.id!=='again';
@@ -84,7 +121,7 @@
     $('result-heart').hidden=won;$('claim-note').hidden=!won;$('result-round').textContent='참여번호 '+String(round.number).padStart(4,'0');
     if(!resultDialog.open)resultDialog.showModal();
     $('play-status').textContent=won?'당첨을 축하해요! 현장 직원에게 결과를 보여주세요.':'참여해주셔서 감사해요. 직원 확인 후 다음 참여자를 안내해주세요.';
-    if(celebrate)celebration(won);
+    if(celebrate)celebration(prize.id);
   }
   function finish(){
     busy=false;animationFrame=null;
@@ -118,6 +155,7 @@
   function nextParticipant(){
     if(busy)return;
     if(!save({...state,rotation:Core.modulo(state.rotation),active:null}))return;
+    clearCelebration();
     disc.style.transform=`rotate(${state.rotation}deg)`;resultDialog.close();setPhase('idle');
     $('play-status').textContent='직원 안내에 따라 한 번씩 참여해주세요.';spinButton.focus({preventScroll:true});
   }
