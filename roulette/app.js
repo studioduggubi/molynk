@@ -39,21 +39,21 @@
     $('center-label').textContent=spinning?'두근두근…':phase==='result'?'결과 보기':'꾹 눌러봐!';
   }
   function makeWheel(){
-    const colors={cake:'#ffe0a0',gelato:'#f7a8c1',laugen:'#d2e6cf',again:'#fbe8ee'};
+    const colors={cake:'url(#cake-gold)',gelato:'#f7a8c1',laugen:'#d2e6cf',again:'#fbe8ee'};
     const point=(r,angle)=>{const a=(angle-90)*Math.PI/180;return [260+r*Math.cos(a),260+r*Math.sin(a)];};
     const imageFor=s=>s.prize==='gelato'?'assets/gelato.webp':s.index===5?'assets/honey-laugen.webp':'assets/matcha-laugen.webp';
     const slices=SEGMENTS.map(s=>{
       const start=s.start/10000*360,end=s.end/10000*360,mid=(start+end)/2,p1=point(260,start),p2=point(260,end),center=point(s.prize==='cake'?205:183,mid);
       const color=s.prize==='again'?(s.index%3===0?'#f8d3e1':'#fbe7ee'):colors[s.prize];
-      const path=`<path d="M260 260 L${p1.join(' ')} A260 260 0 ${end-start>180?1:0} 1 ${p2.join(' ')} Z" fill="${color}" stroke="#fff9f0" stroke-width="2.5"/>`;
+      const path=`<path class="${s.prize==='cake'?'cake-jackpot-wedge':'prize-wedge'}" d="M260 260 L${p1.join(' ')} A260 260 0 ${end-start>180?1:0} 1 ${p2.join(' ')} Z" fill="${color}" stroke="${s.prize==='cake'?'#af6b0c':'#fff9f0'}" stroke-width="${s.prize==='cake'?3:2.5}"/>`;
       let label;
-      if(s.prize==='cake')label='<text y="-11" font-size="19" fill="#ae773d">✦</text><text y="11" font-size="12" font-weight="800" fill="#925c20">2%</text>';
+      if(s.prize==='cake')label='<text y="-13" font-size="21" fill="#fffdf2" stroke="#9d5c06" stroke-width=".7">✦</text><text y="13" font-size="13" font-weight="800" fill="#743b00">2%</text>';
       else if(s.prize==='again')label='<text y="-15" font-size="38" fill="#b47691">♡</text><text y="28" font-size="27" font-weight="800" fill="#975c76">다음 기회에</text>';
       else if(s.prize==='gelato')label=`<image href="${imageFor(s)}" x="-83" y="-78" width="166" height="166"/><rect x="-53" y="36" width="106" height="39" rx="14" fill="#fff9f3" fill-opacity=".94"/><text y="64" font-size="27" font-weight="800" fill="#983b60">젤라토</text>`;
-      else label=`<svg x="-86" y="-76" width="172" height="145" viewBox="50 0 250 200" overflow="hidden"><image href="${imageFor(s)}" x="0" y="0" width="356" height="200"/></svg><rect x="-54" y="35" width="108" height="40" rx="14" fill="#fbfff7" fill-opacity=".95"/><text y="64" font-size="27" font-weight="800" fill="#4e6b43">라우겐</text>`;
+      else label=`<image href="${imageFor(s)}" x="-82" y="-94" width="164" height="154" preserveAspectRatio="xMidYMid meet"/><rect x="-54" y="35" width="108" height="40" rx="14" fill="#fbfff7" fill-opacity=".95"/><text y="64" font-size="27" font-weight="800" fill="#4e6b43">라우겐</text>`;
       return path+`<g transform="translate(${center.join(' ')}) rotate(${mid})" text-anchor="middle" font-family="Paperlogy,Pretendard,sans-serif">${label}</g>`;
     }).join('');
-    $('wheel-svg').innerHTML=slices+'<circle cx="260" cy="260" r="88" fill="#fff1e9" stroke="#fff9ef" stroke-width="3"/>';
+    $('wheel-svg').innerHTML='<defs><linearGradient id="cake-gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff6aa"/><stop offset=".5" stop-color="#ffc83d"/><stop offset="1" stop-color="#f09613"/></linearGradient></defs>'+slices+'<circle cx="260" cy="260" r="101" fill="#ffe5a1" stroke="#fff9ef" stroke-width="3"/>';
     $('wheel-lights').innerHTML=Array.from({length:42},(_,i)=>{const a=i/42*Math.PI*2;return `<i class="wheel-light" style="--x:${Math.cos(a)*46.9}%;--y:${Math.sin(a)*46.9}%"></i>`;}).join('');
   }
   function updateSoundButton(){const b=$('sound-button');b.setAttribute('aria-pressed',String(sound));b.setAttribute('aria-label',sound?'효과음 끄기':'효과음 켜기');b.querySelector('span').textContent=sound?'소리 켜짐':'소리 꺼짐';}

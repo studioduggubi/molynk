@@ -15,11 +15,11 @@
   <meta property="og:image" content="https://studioduggubi.github.io/molynk/campaign.webp">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="manifest" href="manifest.webmanifest?v=20261025-r2">
-  <link rel="stylesheet" href="styles.css?v=20261025-r2">
-  <script src="core.js?v=20261025-r2" defer></script>
-  <script src="app.js?v=20261025-r2" defer></script>
-  <script src="offline.js?v=20261025-r2" defer></script>
+  <link rel="manifest" href="manifest.webmanifest?v=20261025-r3">
+  <link rel="stylesheet" href="styles.css?v=20261025-r3">
+  <script src="core.js?v=20261025-r3" defer></script>
+  <script src="app.js?v=20261025-r3" defer></script>
+  <script src="offline.js?v=20261025-r3" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#spin-button">돌림판 시작 버튼으로 이동</a>
@@ -54,13 +54,13 @@
     </section>
 
     <section class="play-area" aria-label="행운 돌림판 게임">
-      <div class="wheel-caption"><span aria-hidden="true">✧</span> GOOD LUCK, SWEETHEART <span aria-hidden="true">✧</span></div>
+      <div class="wheel-caption jackpot-caption"><span aria-hidden="true">✦</span> 케이크를 잡아라! <b>당첨 확률 2%</b><span aria-hidden="true">✦</span></div>
       <div class="wheel-stage">
         <div class="floating-label" aria-hidden="true">행운을 꾹!</div>
         <div class="wheel-shell">
           <div class="wheel-lights" id="wheel-lights" aria-hidden="true"></div>
           <div class="wheel-disc" id="wheel-disc"><svg id="wheel-svg" viewBox="0 0 520 520" aria-hidden="true"></svg></div>
-          <button class="wheel-center" id="center-button" type="button" aria-label="행운 돌림판 돌리기"><img src="assets/cake.webp" alt="케이크 경품" width="100" height="100"><b class="center-prize">케이크 2%</b><span id="center-label">꾹 눌러봐!</span></button>
+          <button class="wheel-center jackpot-center" id="center-button" type="button" aria-label="행운 돌림판 돌리기"><b class="jackpot-kicker">SPECIAL PRIZE</b><img src="assets/cake.webp" alt="케이크 경품" width="180" height="180"><b class="center-prize">케이크 <em>2%</em></b><span id="center-label">꾹 눌러봐!</span><i class="jackpot-spark js1" aria-hidden="true">✦</i><i class="jackpot-spark js2" aria-hidden="true">✧</i></button>
         </div>
         <div class="pointer" aria-hidden="true"><svg viewBox="0 0 56 72"><path d="M5 18Q5 3 28 3t23 15L30 64q-2 5-4 0Z" fill="#a9325a"/><path d="M10 18Q10 8 28 8t18 10L28 57Z" fill="#ed7598"/><ellipse cx="28" cy="18" rx="9" ry="7" fill="#fff6de"/></svg></div>
         <div class="wheel-base" aria-hidden="true"><span></span><i></i></div>
@@ -69,6 +69,16 @@
       <button class="spin-button" id="spin-button" type="button"><span id="spin-label">행운 돌리기</span><span class="button-spark" aria-hidden="true">✦</span></button>
       <p class="play-status" id="play-status" role="status" aria-live="polite">직원 안내에 따라 한 번씩 참여해주세요.</p>
       <p class="play-help">화살표가 가리키는 칸에서 행운이 결정돼요.</p>
+      <section class="probability-panel" aria-labelledby="probability-title">
+        <h2 id="probability-title">경품별 당첨 확률</h2>
+        <dl class="probability-list">
+          <div class="probability-cake"><dt>케이크</dt><dd>2<span>%</span></dd></div>
+          <div class="probability-gelato"><dt>젤라토</dt><dd>10<span>%</span></dd></div>
+          <div class="probability-laugen"><dt>라우겐</dt><dd>30<span>%</span></dd></div>
+          <div class="probability-again"><dt>다음 기회에</dt><dd>58<span>%</span></dd></div>
+        </dl>
+        <p>라우겐은 말차·허니 중 1개 선택 <span aria-hidden="true">·</span> 매회 같은 확률로 추첨돼요.</p>
+      </section>
       <noscript><p class="noscript-note">돌림판을 사용하려면 브라우저에서 JavaScript를 켜주세요.</p></noscript>
     </section>
   </main>
