@@ -4,7 +4,7 @@
   const $=id=>document.getElementById(id),disc=$('wheel-disc'),spinButton=$('spin-button'),centerButton=$('center-button');
   const resultDialog=$('result-dialog'),historyDialog=$('history-dialog'),motion=matchMedia('(prefers-reduced-motion: reduce)');
   const KEY='molynk-lucky-spin-v1',SOUND_KEY='molynk-lucky-spin-sound';
-  const fresh=()=>({version:1,sequence:0,counts:{cake:0,gelato:0,laugen:0,again:0},history:[],active:null,rotation:0});
+  const fresh=()=>({version:1,layoutVersion:Core.LAYOUT_VERSION,sequence:0,counts:{cake:0,gelato:0,laugen:0,again:0},history:[],active:null,rotation:0});
   let state=fresh(),busy=false,storageReady=true,audio=null,sound=true,animationFrame=null;
   try{
     const raw=localStorage.getItem(KEY);
@@ -14,6 +14,16 @@
       for(const key of Object.keys(PRIZES))if(!Number.isSafeInteger(parsed.counts?.[key])||parsed.counts[key]<0)throw new Error('Invalid saved count');
       if(parsed.active&&(!PRIZES[parsed.active.prize]||!Number.isFinite(parsed.active.target)||!Number.isSafeInteger(parsed.active.number)))throw new Error('Invalid saved result');
       if(parsed.history.some(r=>!PRIZES[r.prize]||!Number.isSafeInteger(r.number)||!Number.isFinite(r.at)))throw new Error('Invalid history');
+      if(parsed.layoutVersion!==Core.LAYOUT_VERSION){
+        // Keep a previously drawn prize intact when upgrading the wheel's appearance.
+        if(parsed.active){
+          const segment=SEGMENTS.find(s=>s.prize===parsed.active.prize);
+          parsed.rotation=Core.modulo(Core.landingRotation(0,segment,.5,1));
+          parsed.active={...parsed.active,target:parsed.rotation,segmentIndex:segment.index};
+        }else parsed.rotation=0;
+        parsed.layoutVersion=Core.LAYOUT_VERSION;
+        localStorage.setItem(KEY,JSON.stringify(parsed));
+      }
       state=parsed;
     }
     sound=localStorage.getItem(SOUND_KEY)!=='off';
@@ -31,17 +41,17 @@
   function makeWheel(){
     const colors={cake:'#ffe0a0',gelato:'#f7a8c1',laugen:'#d2e6cf',again:'#fbe8ee'};
     const point=(r,angle)=>{const a=(angle-90)*Math.PI/180;return [260+r*Math.cos(a),260+r*Math.sin(a)];};
-    const imageFor=s=>s.prize==='gelato'?'assets/gelato.webp':s.index===6?'../prices/images/012.webp':'../prices/images/011.webp';
+    const imageFor=s=>s.prize==='gelato'?'assets/gelato.webp':s.index===5?'assets/honey-laugen.webp':'assets/matcha-laugen.webp';
     const slices=SEGMENTS.map(s=>{
       const start=s.start/10000*360,end=s.end/10000*360,mid=(start+end)/2,p1=point(260,start),p2=point(260,end),center=point(s.prize==='cake'?205:183,mid);
       const color=s.prize==='again'?(s.index%3===0?'#f8d3e1':'#fbe7ee'):colors[s.prize];
       const path=`<path d="M260 260 L${p1.join(' ')} A260 260 0 ${end-start>180?1:0} 1 ${p2.join(' ')} Z" fill="${color}" stroke="#fff9f0" stroke-width="2.5"/>`;
       let label;
-      if(s.prize==='cake')label='<text y="-8" font-size="15" fill="#ae773d">✦</text><text y="8" font-size="8.5" font-weight="700" fill="#a6753b">2%</text>';
-      else if(s.prize==='again')label='<text y="-7" font-size="19" fill="#c58aa3">♡</text><text y="15" font-size="12" font-weight="600" fill="#b17c94">다음 기회에</text>';
-      else if(s.prize==='gelato')label=`<image href="${imageFor(s)}" x="-20" y="-35" width="40" height="49"/><text y="29" font-size="11.5" font-weight="700" fill="#a14c71">젤라토</text>`;
-      else label=`<image href="${imageFor(s)}" x="-38" y="-31" width="76" height="48"/><text y="29" font-size="13" font-weight="700" fill="#66815b">라우겐</text>`;
-      return path+`<g transform="translate(${center.join(' ')}) rotate(${mid})" text-anchor="middle" font-family="Pretendard,sans-serif">${label}</g>`;
+      if(s.prize==='cake')label='<text y="-11" font-size="19" fill="#ae773d">✦</text><text y="11" font-size="12" font-weight="800" fill="#925c20">2%</text>';
+      else if(s.prize==='again')label='<text y="-15" font-size="38" fill="#b47691">♡</text><text y="28" font-size="27" font-weight="800" fill="#975c76">다음 기회에</text>';
+      else if(s.prize==='gelato')label=`<image href="${imageFor(s)}" x="-83" y="-78" width="166" height="166"/><rect x="-53" y="36" width="106" height="39" rx="14" fill="#fff9f3" fill-opacity=".94"/><text y="64" font-size="27" font-weight="800" fill="#983b60">젤라토</text>`;
+      else label=`<svg x="-86" y="-76" width="172" height="145" viewBox="50 0 250 200" overflow="hidden"><image href="${imageFor(s)}" x="0" y="0" width="356" height="200"/></svg><rect x="-54" y="35" width="108" height="40" rx="14" fill="#fbfff7" fill-opacity=".95"/><text y="64" font-size="27" font-weight="800" fill="#4e6b43">라우겐</text>`;
+      return path+`<g transform="translate(${center.join(' ')}) rotate(${mid})" text-anchor="middle" font-family="Paperlogy,Pretendard,sans-serif">${label}</g>`;
     }).join('');
     $('wheel-svg').innerHTML=slices+'<circle cx="260" cy="260" r="88" fill="#fff1e9" stroke="#fff9ef" stroke-width="3"/>';
     $('wheel-lights').innerHTML=Array.from({length:42},(_,i)=>{const a=i/42*Math.PI*2;return `<i class="wheel-light" style="--x:${Math.cos(a)*46.9}%;--y:${Math.sin(a)*46.9}%"></i>`;}).join('');
@@ -70,7 +80,7 @@
     const art=$('result-art');art.className='result-art is-'+prize.id;
     const img=$('result-image'),alt=$('result-image-alt');img.hidden=!prize.image;alt.hidden=prize.id!=='laugen';
     if(prize.image){img.src=prize.image;img.alt=prize.id==='laugen'?'말차 라우겐':prize.name;}
-    if(prize.id==='laugen'){alt.src='../prices/images/012.webp';alt.alt='허니 라우겐';}
+    if(prize.id==='laugen'){alt.src='assets/honey-laugen.webp';alt.alt='허니 라우겐';}
     $('result-heart').hidden=won;$('claim-note').hidden=!won;$('result-round').textContent='참여번호 '+String(round.number).padStart(4,'0');
     if(!resultDialog.open)resultDialog.showModal();
     $('play-status').textContent=won?'당첨을 축하해요! 현장 직원에게 결과를 보여주세요.':'참여해주셔서 감사해요. 직원 확인 후 다음 참여자를 안내해주세요.';

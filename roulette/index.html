@@ -4,22 +4,28 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fff5f7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="몰링크 돌림판">
   <meta name="robots" content="noindex,nofollow">
   <title>말랑말랑 행운 돌림판 · MOLYNK</title>
   <meta name="description" content="몰링크 팝업의 말랑말랑 행운 돌림판. 케이크, 젤라토, 말차·허니 라우겐의 행운을 만나보세요.">
   <meta property="og:title" content="몰링크 · 말랑말랑 행운 돌림판">
   <meta property="og:description" content="한 번 돌려봐요. 몰링크의 행운 선물이 기다려요.">
   <meta property="og:image" content="https://studioduggubi.github.io/molynk/campaign.webp">
-  <link rel="icon" href="../logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261024-r1">
-  <script src="core.js?v=20261024-r1" defer></script>
-  <script src="app.js?v=20261024-r1" defer></script>
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest?v=20261025-r2">
+  <link rel="stylesheet" href="styles.css?v=20261025-r2">
+  <script src="core.js?v=20261025-r2" defer></script>
+  <script src="app.js?v=20261025-r2" defer></script>
+  <script src="offline.js?v=20261025-r2" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#spin-button">돌림판 시작 버튼으로 이동</a>
   <div class="background-decoration" aria-hidden="true"><span class="doodle d1">✦</span><span class="doodle d2">♡</span><span class="doodle d3">✧</span><span class="doodle d4">♡</span></div>
   <header class="site-header">
-    <a class="logo" href="./" aria-label="몰링크 돌림판 처음으로"><img src="../logo.svg" alt="MOLYNK" width="120" height="55"></a>
+    <a class="logo" href="./" aria-label="몰링크 돌림판 처음으로"><img src="assets/logo.svg" alt="MOLYNK" width="120" height="55"></a>
     <span class="header-caption">A LITTLE LUCK, A LOT OF SQUISH.</span>
     <div class="header-tools">
       <button class="icon-button" id="sound-button" type="button" aria-label="효과음 끄기" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4 5 9H2v6h3l6 5V4Zm4 4c2 2 2 6 0 8m3-11c4 4 4 10 0 14"/></svg><span>소리</span></button>
@@ -27,11 +33,12 @@
       <button class="icon-button" id="history-button" type="button" aria-label="이 기기의 진행 기록 보기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v16H4zM8 2v6m8-6v6M8 12h8m-8 4h5"/></svg><span>기록</span></button>
     </div>
   </header>
+  <div class="offline-banner"><button type="button" class="offline-status" id="offline-status" aria-label="오프라인 준비 상태와 아이패드 설치 안내"><i aria-hidden="true"></i><span id="offline-status-text">오프라인 준비 확인 중…</span><span class="offline-info" aria-hidden="true">ⓘ</span></button></div>
 
   <main class="game-layout">
     <section class="intro" aria-labelledby="page-title">
       <div class="eyebrow"><span aria-hidden="true">✦</span> MOLYNK LUCKY SPIN</div>
-      <h1 id="page-title">말랑말랑,<br><span>행운을 돌려봐!</span></h1>
+      <h1 class="title-art" id="page-title"><img src="assets/title.svg" alt="말랑말랑, 행운을 돌려봐!" width="790" height="274"></h1>
       <p class="intro-description">두근두근, 어떤 선물이 나올까요?<br>버튼을 꾹 누르고 행운을 만나보세요.</p>
       <div class="lucky-tag"><span aria-hidden="true">♡</span><b>42%</b>의 행운이 기다려요</div>
 
@@ -40,7 +47,7 @@
         <div class="prize-cards">
           <article class="prize-card cake-card"><span class="prize-rate">2%</span><img src="assets/cake.webp" width="220" height="220" alt="분홍 리본 케이크 말랑이"><h2>케이크</h2><p>두근두근 큰 행운</p></article>
           <article class="prize-card gelato-card"><span class="prize-rate">10%</span><img src="assets/gelato.webp" width="220" height="220" alt="딸기 젤라토 말랑이"><h2>젤라토</h2><p>달콤한 행운 한 스쿱</p></article>
-          <article class="prize-card laugen-card"><span class="prize-rate">30%</span><div class="laugen-pair"><img src="../prices/images/011.webp" width="180" height="100" alt="말차 라우겐"><img src="../prices/images/012.webp" width="180" height="100" alt="허니 라우겐"></div><h2>라우겐</h2><p>말차·허니 중 1개 선택</p></article>
+          <article class="prize-card laugen-card"><span class="prize-rate">30%</span><div class="laugen-pair"><img src="assets/matcha-laugen.webp" width="180" height="100" alt="말차 라우겐"><img src="assets/honey-laugen.webp" width="180" height="100" alt="허니 라우겐"></div><h2>라우겐</h2><p>말차·허니 중 1개 선택</p></article>
         </div>
         <p class="again-note"><span aria-hidden="true">♡</span> 다음 기회에 58% <span class="note-dot">·</span> 각 회차는 같은 확률로 추첨돼요.</p>
       </section>
@@ -53,7 +60,7 @@
         <div class="wheel-shell">
           <div class="wheel-lights" id="wheel-lights" aria-hidden="true"></div>
           <div class="wheel-disc" id="wheel-disc"><svg id="wheel-svg" viewBox="0 0 520 520" aria-hidden="true"></svg></div>
-          <button class="wheel-center" id="center-button" type="button" aria-label="행운 돌림판 돌리기"><img src="../logo.svg" alt="" width="98" height="45"><span id="center-label">꾹 눌러봐!</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-8 12h6l-1 8 9-12h-6l1-8Z"/></svg></button>
+          <button class="wheel-center" id="center-button" type="button" aria-label="행운 돌림판 돌리기"><img src="assets/cake.webp" alt="케이크 경품" width="100" height="100"><b class="center-prize">케이크 2%</b><span id="center-label">꾹 눌러봐!</span></button>
         </div>
         <div class="pointer" aria-hidden="true"><svg viewBox="0 0 56 72"><path d="M5 18Q5 3 28 3t23 15L30 64q-2 5-4 0Z" fill="#a9325a"/><path d="M10 18Q10 8 28 8t18 10L28 57Z" fill="#ed7598"/><ellipse cx="28" cy="18" rx="9" ry="7" fill="#fff6de"/></svg></div>
         <div class="wheel-base" aria-hidden="true"><span></span><i></i></div>
@@ -70,7 +77,7 @@
   <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
 
   <dialog class="result-dialog" id="result-dialog" aria-labelledby="result-title" aria-describedby="result-description">
-    <div class="result-topline"><img src="../logo.svg" alt="MOLYNK" width="90" height="42"><span id="result-badge">LUCKY YOU!</span></div>
+    <div class="result-topline"><img src="assets/logo.svg" alt="MOLYNK" width="90" height="42"><span id="result-badge">LUCKY YOU!</span></div>
     <div class="result-art" id="result-art"><span class="result-halo" aria-hidden="true"></span><img id="result-image" alt=""><img id="result-image-alt" alt="" hidden><span class="result-heart" id="result-heart" aria-hidden="true" hidden>♡</span><i class="result-spark rs1" aria-hidden="true">✦</i><i class="result-spark rs2" aria-hidden="true">✧</i></div>
     <h2 id="result-title"></h2><p id="result-description"></p>
     <div class="claim-note" id="claim-note">화면을 현장 직원에게 보여주세요.<br>직원 확인 후 경품을 받아가세요.</div>
@@ -85,6 +92,13 @@
     <div class="history-totals" id="history-totals"></div><div class="history-summary" id="history-summary"></div>
     <div class="history-list-heading"><h3>최근 추첨</h3><button type="button" id="csv-button">기록 CSV 받기 ↓</button></div><ol class="history-list" id="history-list"></ol>
     <p class="history-footnote">기기 기록은 운영 참고용입니다. 실제 경품은 현장에서 직원 확인 후 지급해주세요.</p>
+  </dialog>
+  <dialog class="history-dialog offline-dialog" id="offline-dialog" aria-labelledby="offline-title">
+    <div class="history-heading"><div><span class="eyebrow">READY FOR YOUR iPAD</span><h2 id="offline-title">인터넷 없이 돌려요.</h2></div><button class="close-button" id="offline-close" type="button" aria-label="오프라인 안내 닫기">×</button></div>
+    <p class="offline-help-status" id="offline-help-status" role="status" aria-live="polite">게임 저장 상태를 확인하고 있어요.</p>
+    <ol class="install-steps"><li><b>아이패드 Safari에서 열기</b><span>처음 한 번은 인터넷에 연결해주세요.</span></li><li><b>‘오프라인 준비 완료’ 확인</b><span>사진·게임·효과음이 인터넷 없이 작동하도록 준비돼요.</span></li><li><b>공유 → 홈 화면에 추가</b><span>몰링크 아이콘을 추가한 뒤, 그 아이콘으로 게임을 열어주세요.</span></li><li><b>비행기 모드로 한 번 확인</b><span>아이콘에서 게임이 열리고 돌림판이 돌아가면 준비 끝!</span></li></ol>
+    <button type="button" class="next-button" id="offline-retry">저장 상태 다시 확인 <span aria-hidden="true">↻</span></button>
+    <p class="history-footnote">진행 기록은 사용하는 앱 안에 저장돼요. 운영할 때는 홈 화면 아이콘으로 실행해주세요. 인터넷이 다시 연결되면 새 버전도 확인해요.</p>
   </dialog>
 </body>
 </html>

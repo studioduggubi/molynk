@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "몰링크 · 말랑말랑 행운 돌림판",
+  "short_name": "몰링크 돌림판",
+  "description": "인터넷 없이도 돌리는 몰링크 팝업 행운 돌림판",
+  "lang": "ko-KR",
+  "start_url": "./?mode=app",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff5f7",
+  "theme_color": "#fff5f7",
+  "icons": [
+    {"src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}
