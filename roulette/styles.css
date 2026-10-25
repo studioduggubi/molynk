@@ -48,3 +48,88 @@ h1,.spin-button,.prize-card h2,.result-dialog h2,.next-button{font-family:Paperl
 @media(max-width:780px){.top-probability{width:calc(100% - 44px);max-width:516px;margin-top:12px;padding:0}.top-probability h2{font-size:10px;margin-bottom:7px}.top-probability .probability-list{gap:6px}.top-probability .probability-list>div{flex-direction:column;justify-content:center;gap:5px;min-height:112px;padding:8px 3px;border-radius:13px}.top-probability dt{flex-direction:column;gap:4px;font-size:10px}.top-probability dd,.top-probability .probability-cake dd{font-size:25px}.top-probability dd>span{font-size:14px}.probability-icon,.probability-icon-pair,.probability-heart{width:38px;height:38px}.probability-heart{font-size:31px}.probability-icon-pair img{width:30px;height:35px}.probability-icon-pair img:first-child{margin-right:-21px}.top-probability>p{font-size:8px;margin-top:7px}.offline-footer{padding-top:0;padding-bottom:23px}.offline-footer .offline-status{font-size:9px}}
 @media(max-width:780px) and (max-height:760px){.top-probability{margin-top:9px}.top-probability .probability-list>div{min-height:94px;gap:4px;padding-block:6px}.top-probability dt{font-size:9px;gap:3px}.probability-icon,.probability-icon-pair,.probability-heart{width:29px;height:29px}.probability-heart{font-size:25px}.probability-icon-pair img{width:25px;height:28px}.top-probability dd,.top-probability .probability-cake dd{font-size:22px}.top-probability>p{margin-top:5px}.game-layout{padding-top:12px}}
 @media(min-width:781px) and (max-height:950px){.wheel-stage{max-width:min(640px,45svh)}}
+
+/* iPad event screen: all operating controls fit the live viewport, including Safari bars. */
+.play-controls{display:contents}
+@media(min-width:700px){
+  html{height:100%;overflow:hidden;overscroll-behavior:none}
+  body{height:100vh;height:100dvh;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:44px 90px minmax(0,1fr) 28px;gap:10px;padding:max(20px,env(safe-area-inset-top)) max(28px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(28px,env(safe-area-inset-left));overflow:hidden;overscroll-behavior:none}
+  .site-header{grid-area:1/1;width:100%;max-width:1320px;min-height:0;padding:0 0 5px;margin:0 auto;gap:18px;align-self:stretch}
+  .site-header .logo img{width:90px;height:41px}
+  .header-caption{font-size:8px}.header-tools{gap:13px}.site-header .icon-button{min-width:38px;min-height:38px;font-size:10px;flex-direction:row;gap:5px}.site-header .icon-button svg{width:18px;height:18px}
+  .top-probability{grid-area:2/1;width:100%;max-width:1320px;margin:0 auto;padding:0;display:grid;grid-template-rows:12px minmax(0,1fr) 11px;row-gap:4px;align-self:stretch}
+  .top-probability h2{font-size:10px;line-height:12px;margin:0}.top-probability .probability-list{gap:10px;min-height:0}
+  .top-probability .probability-list>div{min-height:0;padding:5px 12px;gap:8px;flex-direction:row;justify-content:space-between;border-radius:13px}
+  .top-probability dt{flex-direction:row;font-size:11px;gap:7px}.top-probability dd,.top-probability .probability-cake dd{font-size:28px}.top-probability dd>span{font-size:15px}
+  .top-probability .probability-icon,.top-probability .probability-icon-pair,.top-probability .probability-heart{width:40px;height:40px}.top-probability .probability-heart{font-size:32px}.top-probability .probability-icon-pair img{width:31px;height:37px}.top-probability .probability-icon-pair img:first-child{margin-right:-23px}
+  .top-probability>p{margin:0;font-size:8px;line-height:11px}
+  .game-layout{grid-area:3/1;display:grid;grid-template-columns:minmax(230px,.78fr) minmax(0,1.22fr);grid-template-rows:minmax(0,1fr);gap:clamp(22px,3vw,50px);width:100%;height:100%;min-height:0;max-width:1320px;margin:0 auto;padding:0;align-items:stretch}
+  .intro{grid-area:1/1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;width:100%;max-width:390px;height:100%;min-height:0;margin:auto}
+  .intro>.eyebrow{font-size:9px;line-height:15px;gap:7px}.intro>.eyebrow>span{font-size:14px}
+  .intro .title-art{width:100%;max-width:360px;margin:10px 0 17px;line-height:1;text-align:left}.intro .title-art img{width:100%;height:auto}
+  .intro-description,.lucky-tag{display:none}
+  .intro .prize-shelf{width:100%;margin:0}.intro .prize-shelf-heading{font-size:12px;line-height:16px;margin-bottom:7px}.intro .prize-shelf-heading>span+span{font-size:7px}
+  .intro .prize-cards{gap:9px}.intro .prize-card{padding:7px 6px 9px;border-radius:16px}.intro .prize-rate{font-size:10px;line-height:14px;padding:3px 7px;margin:0 0 -9px 1px}
+  .intro .prize-card>img,.intro .gelato-card>img{height:clamp(64px,10dvh,110px);padding:0}
+  .intro .prize-card h2{font-size:16px;line-height:20px;margin:7px 0 3px}.intro .prize-card p{font-size:8px;line-height:12px}
+  .intro .laugen-card{padding:6px 10px;grid-template-columns:53% 47%}.intro .laugen-card>.prize-rate{top:6px;left:6px}
+  .intro .laugen-card .laugen-pair{height:clamp(60px,11dvh,105px);margin:0 -7px}.intro .laugen-card .laugen-pair img{height:clamp(55px,10dvh,95px)}
+  .intro .laugen-card h2{font-size:17px;line-height:20px;margin:0 0 5px}.intro .laugen-card p{font-size:9px;line-height:14px}
+  .intro .again-note{font-size:8px;line-height:13px;text-align:left;margin:7px 0 0}
+  .play-area{grid-area:1/2;display:grid;grid-template-rows:minmax(0,1fr) 84px;gap:10px;width:100%;height:100%;min-height:0;align-self:stretch}
+  .play-controls{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;min-width:0;min-height:0}
+  .play-area>.jackpot-caption,.play-area .play-help{display:none}
+  .wheel-viewport{container-type:size;display:grid;place-items:center;min-width:0;min-height:0;width:100%;height:100%}
+  .wheel-viewport .wheel-stage{width:min(calc(100cqw - 32px),calc(100cqh - 52px),640px);max-width:none;margin:0;padding:20px 0 24px}
+  .wheel-shell{width:100%;border-width:3px;box-shadow:0 7px 0 #ab416a,0 10px 0 #fff6ee,0 16px 24px #a34a6b2b}
+  .wheel-viewport .pointer{top:0;width:43px;height:56px}.wheel-base{bottom:0}.wheel-light{width:8px;height:8px}
+  .floating-label{right:-5px;top:12%;font-size:10px;padding:7px 9px}.s1{left:-5px;top:12%;font-size:25px}.s2{right:-7px;bottom:17%;font-size:32px}
+  .play-area .spin-button{width:min(330px,88%);min-height:54px;height:54px;margin:0 auto;border-radius:18px;font-size:21px}
+  .play-area .play-status{align-self:center;margin:0;font-size:10px;line-height:18px;min-height:18px;white-space:nowrap;word-break:keep-all;text-wrap:balance}
+  .site-footer{grid-area:4/1;display:flex;justify-content:flex-start;align-items:center;width:100%;height:28px;min-height:0;max-width:1320px;margin:0 auto;padding:0 200px 0 0;border:0;font-size:7px;line-height:12px}.site-footer>span+span{display:none}
+  .offline-footer{grid-area:4/1;justify-self:end;align-self:center;display:flex;flex-direction:row;gap:0;margin:0;padding:0;height:28px;z-index:1}.offline-footer .offline-status{min-height:26px;max-height:28px;margin:0;padding:4px 9px;font-size:9px;line-height:15px}.offline-footer-caption{display:none}
+}
+@media(min-width:700px) and (max-width:850px){
+  .game-layout{grid-template-columns:minmax(230px,.8fr) minmax(0,1.2fr);gap:20px}.header-caption{display:none}.site-header .icon-button{font-size:9px}.top-probability .probability-list{gap:7px}.top-probability .probability-list>div{padding-inline:7px;gap:5px}.top-probability dt{font-size:10px;gap:5px}.top-probability dd,.top-probability .probability-cake dd{font-size:24px}.top-probability .probability-icon,.top-probability .probability-icon-pair,.top-probability .probability-heart{width:32px;height:35px}.top-probability .probability-icon-pair img{width:28px;height:32px}.top-probability .probability-heart{font-size:28px}.intro .prize-card p{font-size:7px}.play-area .play-status{font-size:8px}
+}
+@media(min-width:700px) and (max-height:720px){
+  .intro .prize-shelf{display:none}.intro .title-art{max-width:340px;margin-bottom:0}.intro>.eyebrow{margin-bottom:5px}.game-layout{grid-template-columns:minmax(230px,.8fr) minmax(0,1.2fr)}.wheel-light{width:6px;height:6px}.wheel-center.jackpot-center{padding:7px 3px 5px;gap:1px;border-width:3px}.jackpot-center .jackpot-kicker{font-size:6px}.jackpot-center .center-prize{font-size:11px;gap:3px}.jackpot-center>span{font-size:6px}.jackpot-center .jackpot-spark.js1{font-size:22px}.jackpot-center .jackpot-spark.js2{font-size:18px}.floating-label{font-size:8px;padding:6px 7px}.play-area .play-status{font-size:9px}.wheel-base{transform:translateX(-50%) scale(.8);transform-origin:bottom center}
+}
+@media(min-width:950px) and (max-height:720px){
+  .game-layout{grid-template-columns:minmax(215px,.65fr) minmax(0,1.35fr);gap:25px}
+  .play-area{grid-template-columns:minmax(0,1fr) 170px;grid-template-rows:minmax(0,1fr);gap:20px}.wheel-viewport{grid-area:1/1}.play-controls{grid-area:1/2;align-self:center;height:auto;gap:16px}.play-area .spin-button{width:100%;font-size:18px;gap:10px}.play-area .play-status{white-space:normal;font-size:10px;line-height:18px;min-height:0;max-width:170px}
+}
+@media(min-width:700px){
+  .result-dialog{width:min(420px,calc(100vw - 56px));max-height:calc(100dvh - 56px);padding:18px 22px 16px;border-radius:26px}
+  .result-dialog .result-topline{height:35px}.result-dialog .result-topline img{width:76px;height:35px}
+  .result-dialog .result-art{height:clamp(90px,20dvh,210px);margin-top:8px}.result-dialog .result-art>img{height:100%;max-height:100%}
+  .result-dialog .result-halo{width:min(170px,18dvh);height:min(170px,18dvh);box-shadow:0 0 0 9px #fcebf0,0 0 0 10px #f5d8e3}
+  .result-dialog .result-art.is-laugen>img{height:74%;transform:rotate(-6deg);margin-top:0}.result-dialog .result-art.is-laugen>img+img{transform:rotate(6deg);margin-top:14px}
+  .result-dialog h2{font-size:clamp(26px,3.8dvh,34px);line-height:1.2;margin:10px 0 8px}.result-dialog.is-again h2{font-size:26px}
+  .result-dialog>p{font-size:12px;line-height:18px}.result-dialog .claim-note{padding:8px;margin-top:10px;font-size:10px;line-height:16px}
+  .result-dialog .result-round{font-size:9px;line-height:12px;margin:9px 0}.result-dialog .next-button{min-height:46px;height:46px;font-size:13px}
+  .result-dialog .operator-note{font-size:8px;line-height:12px;margin:8px 0 0}
+}
+/* Give the wheel three quarters of the event canvas. */
+@media(min-width:700px){
+  .game-layout{grid-template-columns:minmax(170px,.5fr) minmax(0,1.5fr);gap:24px}
+  .intro{max-width:320px}.intro .title-art{max-width:300px;margin-bottom:15px}
+  .intro .prize-shelf-heading{font-size:11px}.intro .prize-shelf-heading>span+span{display:none}
+  .intro .prize-cards{grid-template-columns:minmax(0,1fr);gap:8px}
+  .intro .prize-card{display:grid;grid-template-columns:44% 56%;grid-template-rows:1fr 1fr;align-items:center;padding:7px 8px;min-width:0;text-align:left}
+  .intro .prize-card>.prize-rate{position:absolute;top:6px;left:6px;margin:0;font-size:9px;padding:2px 6px;line-height:13px}
+  .intro .prize-card>img,.intro .gelato-card>img{grid-column:1;grid-row:1/3;width:100%;height:clamp(58px,9dvh,88px);margin:0;object-fit:contain}
+  .intro .prize-card h2{grid-column:2;grid-row:1;align-self:end;font-size:16px;line-height:20px;margin:0 0 4px;text-align:left}
+  .intro .prize-card p{grid-column:2;grid-row:2;align-self:start;font-size:8px;line-height:12px;text-align:left;white-space:normal}
+  .intro .laugen-card{grid-template-columns:44% 56%}.intro .laugen-card .laugen-pair{height:clamp(58px,9dvh,88px);margin:0 -4px}.intro .laugen-card .laugen-pair img{height:clamp(53px,8dvh,82px)}
+  .intro .again-note{font-size:7px;line-height:12px}
+  .wheel-viewport .wheel-stage{width:min(calc(100cqw - 32px),calc(100cqh - 52px),760px)}
+}
+@media(min-width:950px) and (orientation:landscape){
+  .play-area{grid-template-columns:minmax(0,1fr) 150px;grid-template-rows:minmax(0,1fr);gap:16px}.wheel-viewport{grid-area:1/1}.play-controls{grid-area:1/2;align-self:center;height:auto;gap:16px}.play-area .spin-button{width:100%;font-size:17px;gap:9px}.play-area .play-status{white-space:normal;font-size:10px;line-height:18px;min-height:0;max-width:150px}
+}
+@media(min-width:700px) and (max-height:720px){
+  body{grid-template-rows:40px 76px minmax(0,1fr) 26px;gap:8px}
+  .site-header .logo img{width:78px;height:35px}.site-header .icon-button{min-height:35px;font-size:9px}
+  .top-probability{grid-template-rows:11px minmax(0,1fr) 10px;row-gap:3px}.top-probability h2{font-size:9px;line-height:11px}.top-probability .probability-list>div{padding-block:3px}.top-probability .probability-icon,.top-probability .probability-icon-pair,.top-probability .probability-heart{width:34px;height:34px}.top-probability .probability-icon-pair img{width:28px;height:31px}.top-probability>p{font-size:7px;line-height:10px}.site-footer,.offline-footer{height:26px}
+}

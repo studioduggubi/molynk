@@ -15,11 +15,11 @@
   <meta property="og:image" content="https://studioduggubi.github.io/molynk/campaign.webp">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="manifest" href="manifest.webmanifest?v=20261025-r5">
-  <link rel="stylesheet" href="styles.css?v=20261025-r5">
-  <script src="core.js?v=20261025-r5" defer></script>
-  <script src="app.js?v=20261025-r5" defer></script>
-  <script src="offline.js?v=20261025-r5" defer></script>
+  <link rel="manifest" href="manifest.webmanifest?v=20261025-r6">
+  <link rel="stylesheet" href="styles.css?v=20261025-r6">
+  <script src="core.js?v=20261025-r6" defer></script>
+  <script src="app.js?v=20261025-r6" defer></script>
+  <script src="offline.js?v=20261025-r6" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#spin-button">돌림판 시작 버튼으로 이동</a>
@@ -64,7 +64,7 @@
 
     <section class="play-area" aria-label="행운 돌림판 게임">
       <div class="wheel-caption jackpot-caption"><span aria-hidden="true">✦</span> 케이크를 잡아라! <b>당첨 확률 2%</b><span aria-hidden="true">✦</span></div>
-      <div class="wheel-stage">
+      <div class="wheel-viewport"><div class="wheel-stage">
         <div class="floating-label" aria-hidden="true">행운을 꾹!</div>
         <div class="wheel-shell">
           <div class="wheel-lights" id="wheel-lights" aria-hidden="true"></div>
@@ -74,10 +74,10 @@
         <div class="pointer" aria-hidden="true"><svg viewBox="0 0 56 72"><path d="M5 18Q5 3 28 3t23 15L30 64q-2 5-4 0Z" fill="#a9325a"/><path d="M10 18Q10 8 28 8t18 10L28 57Z" fill="#ed7598"/><ellipse cx="28" cy="18" rx="9" ry="7" fill="#fff6de"/></svg></div>
         <div class="wheel-base" aria-hidden="true"><span></span><i></i></div>
         <span class="stage-spark s1" aria-hidden="true">✦</span><span class="stage-spark s2" aria-hidden="true">✧</span>
-      </div>
-      <button class="spin-button" id="spin-button" type="button"><span id="spin-label">행운 돌리기</span><span class="button-spark" aria-hidden="true">✦</span></button>
+      </div></div>
+      <div class="play-controls"><button class="spin-button" id="spin-button" type="button"><span id="spin-label">행운 돌리기</span><span class="button-spark" aria-hidden="true">✦</span></button>
       <p class="play-status" id="play-status" role="status" aria-live="polite">직원 안내에 따라 한 번씩 참여해주세요.</p>
-      <p class="play-help">화살표가 가리키는 칸에서 행운이 결정돼요.</p>
+      <p class="play-help">화살표가 가리키는 칸에서 행운이 결정돼요.</p></div>
       <noscript><p class="noscript-note">돌림판을 사용하려면 브라우저에서 JavaScript를 켜주세요.</p></noscript>
     </section>
   </main>
