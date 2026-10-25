@@ -15,11 +15,11 @@
   <meta property="og:image" content="https://studioduggubi.github.io/molynk/campaign.webp">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="manifest" href="manifest.webmanifest?v=20261025-r6">
-  <link rel="stylesheet" href="styles.css?v=20261025-r6">
-  <script src="core.js?v=20261025-r6" defer></script>
-  <script src="app.js?v=20261025-r6" defer></script>
-  <script src="offline.js?v=20261025-r6" defer></script>
+  <link rel="manifest" href="manifest.webmanifest?v=20261025-r7">
+  <link rel="stylesheet" href="styles.css?v=20261025-r7">
+  <script src="core.js?v=20261025-r7" defer></script>
+  <script src="app.js?v=20261025-r7" defer></script>
+  <script src="offline.js?v=20261025-r7" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#spin-button">돌림판 시작 버튼으로 이동</a>
@@ -33,32 +33,20 @@
       <button class="icon-button" id="history-button" type="button" aria-label="이 기기의 진행 기록 보기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v16H4zM8 2v6m8-6v6M8 12h8m-8 4h5"/></svg><span>기록</span></button>
     </div>
   </header>
-  <section class="probability-panel top-probability" aria-labelledby="probability-title">
-    <h2 id="probability-title">경품별 당첨 확률</h2>
-    <dl class="probability-list">
-      <div class="probability-cake"><dt><img class="probability-icon" src="assets/cake.webp" alt="" width="52" height="52"><span>케이크</span></dt><dd>2<span>%</span></dd></div>
-      <div class="probability-gelato"><dt><img class="probability-icon" src="assets/gelato.webp" alt="" width="52" height="52"><span>젤라토</span></dt><dd>10<span>%</span></dd></div>
-      <div class="probability-laugen"><dt><span class="probability-icon-pair" aria-hidden="true"><img src="assets/matcha-laugen.webp" alt="" width="40" height="46"><img src="assets/honey-laugen.webp" alt="" width="40" height="46"></span><span>라우겐</span></dt><dd>30<span>%</span></dd></div>
-      <div class="probability-again"><dt><span class="probability-heart" aria-hidden="true">♡</span><span>다음 기회에</span></dt><dd>58<span>%</span></dd></div>
-    </dl>
-    <p>라우겐은 말차·허니 중 1개 선택 <span aria-hidden="true">·</span> 매회 같은 확률로 추첨돼요.</p>
-  </section>
 
   <main class="game-layout">
     <section class="intro" aria-labelledby="page-title">
       <div class="eyebrow"><span aria-hidden="true">✦</span> MOLYNK LUCKY SPIN</div>
       <h1 class="title-art" id="page-title"><img src="assets/title.svg" alt="말랑말랑, 행운을 돌려봐!" width="790" height="274"></h1>
-      <p class="intro-description">두근두근, 어떤 선물이 나올까요?<br>버튼을 꾹 누르고 행운을 만나보세요.</p>
-      <div class="lucky-tag"><span aria-hidden="true">♡</span><b>42%</b>의 행운이 기다려요</div>
-
       <section class="prize-shelf" aria-label="경품과 당첨 확률">
-        <div class="prize-shelf-heading"><span>오늘의 행운 선물</span><span aria-hidden="true">PICK YOUR LUCK</span></div>
+        <div class="prize-shelf-heading"><span>경품 · 당첨 확률</span></div>
         <div class="prize-cards">
-          <article class="prize-card cake-card"><span class="prize-rate">2%</span><img src="assets/cake.webp" width="220" height="220" alt="분홍 리본 케이크 말랑이"><h2>케이크</h2><p>두근두근 큰 행운</p></article>
-          <article class="prize-card gelato-card"><span class="prize-rate">10%</span><img src="assets/gelato.webp" width="220" height="220" alt="딸기 젤라토 말랑이"><h2>젤라토</h2><p>달콤한 행운 한 스쿱</p></article>
-          <article class="prize-card laugen-card"><span class="prize-rate">30%</span><div class="laugen-pair"><img src="assets/matcha-laugen.webp" width="180" height="100" alt="말차 라우겐"><img src="assets/honey-laugen.webp" width="180" height="100" alt="허니 라우겐"></div><h2>라우겐</h2><p>말차·허니 중 1개 선택</p></article>
+          <article class="prize-card cake-card"><img src="assets/cake.webp" width="220" height="220" alt="분홍 리본 케이크 말랑이"><div class="prize-copy"><h2>케이크</h2><strong class="prize-rate">2<small>%</small></strong><p>두근두근 큰 행운</p></div></article>
+          <article class="prize-card gelato-card"><img src="assets/gelato.webp" width="220" height="220" alt="딸기 젤라토 말랑이"><div class="prize-copy"><h2>젤라토</h2><strong class="prize-rate">10<small>%</small></strong><p>달콤한 행운 한 스쿱</p></div></article>
+          <article class="prize-card laugen-card"><div class="laugen-pair"><img src="assets/matcha-laugen.webp" width="180" height="100" alt="말차 라우겐"><img src="assets/honey-laugen.webp" width="180" height="100" alt="허니 라우겐"></div><div class="prize-copy"><h2>라우겐</h2><strong class="prize-rate">30<small>%</small></strong><p>말차·허니 중 1개 선택</p></div></article>
         </div>
-        <p class="again-note"><span aria-hidden="true">♡</span> 다음 기회에 58% <span class="note-dot">·</span> 각 회차는 같은 확률로 추첨돼요.</p>
+        <div class="again-summary"><span><i aria-hidden="true">♡</i> 다음 기회에</span><b>58<span>%</span></b></div>
+        <p class="again-note">매회 같은 확률로 추첨돼요.</p>
       </section>
     </section>
 
@@ -69,18 +57,20 @@
         <div class="wheel-shell">
           <div class="wheel-lights" id="wheel-lights" aria-hidden="true"></div>
           <div class="wheel-disc" id="wheel-disc"><svg id="wheel-svg" viewBox="0 0 520 520" aria-hidden="true"></svg></div>
-          <button class="wheel-center jackpot-center" id="center-button" type="button" aria-label="행운 돌림판 돌리기"><b class="jackpot-kicker">SPECIAL PRIZE</b><img src="assets/cake.webp" alt="케이크 경품" width="180" height="180"><b class="center-prize">케이크 <em>2%</em></b><span id="center-label">꾹 눌러봐!</span><i class="jackpot-spark js1" aria-hidden="true">✦</i><i class="jackpot-spark js2" aria-hidden="true">✧</i></button>
+          <button class="wheel-center jackpot-center" id="center-button" type="button" aria-label="행운 돌림판 돌리기"><svg class="jackpot-backplate" viewBox="0 0 200 200" aria-hidden="true"><defs><radialGradient id="jackpot-disc-fill" cx="38%" cy="24%" r="78%"><stop stop-color="#72133f"/><stop offset=".65" stop-color="#380820"/><stop offset="1" stop-color="#1b0a1d"/></radialGradient></defs><circle cx="100" cy="100" r="98" fill="#d7a444"/><circle cx="100" cy="100" r="94" fill="#fff0bb"/><circle cx="100" cy="100" r="90" fill="url(#jackpot-disc-fill)"/><circle cx="100" cy="100" r="97" fill="none" stroke="#fff1bb" stroke-width="1" stroke-dasharray="3 5"/></svg><b class="jackpot-kicker">SPECIAL PRIZE</b><img src="assets/cake.webp" alt="케이크 경품" width="180" height="180"><b class="center-prize">케이크 <em>2%</em></b><span id="center-label">꾹 눌러봐!</span><i class="jackpot-spark js1" aria-hidden="true">✦</i><i class="jackpot-spark js2" aria-hidden="true">✧</i></button>
         </div>
         <div class="pointer" aria-hidden="true"><svg viewBox="0 0 56 72"><path d="M5 18Q5 3 28 3t23 15L30 64q-2 5-4 0Z" fill="#a9325a"/><path d="M10 18Q10 8 28 8t18 10L28 57Z" fill="#ed7598"/><ellipse cx="28" cy="18" rx="9" ry="7" fill="#fff6de"/></svg></div>
         <div class="wheel-base" aria-hidden="true"><span></span><i></i></div>
         <span class="stage-spark s1" aria-hidden="true">✦</span><span class="stage-spark s2" aria-hidden="true">✧</span>
       </div></div>
-      <div class="play-controls"><button class="spin-button" id="spin-button" type="button"><span id="spin-label">행운 돌리기</span><span class="button-spark" aria-hidden="true">✦</span></button>
-      <p class="play-status" id="play-status" role="status" aria-live="polite">직원 안내에 따라 한 번씩 참여해주세요.</p>
-      <p class="play-help">화살표가 가리키는 칸에서 행운이 결정돼요.</p></div>
+
       <noscript><p class="noscript-note">돌림판을 사용하려면 브라우저에서 JavaScript를 켜주세요.</p></noscript>
     </section>
   </main>
+
+      <div class="play-controls event-controls"><button class="spin-button" id="spin-button" type="button"><span id="spin-label">행운 돌리기</span><span class="button-spark" aria-hidden="true">✦</span></button>
+      <p class="play-status" id="play-status" role="status" aria-live="polite">직원 안내에 따라 한 번씩 참여해주세요.</p>
+      <p class="play-help">화살표가 가리키는 칸에서 행운이 결정돼요.</p></div>
 
   <footer class="site-footer"><span>MOLYNK · THE HYUNDAI SEOUL POP-UP</span><span>말랑한 행운을 함께해요 ♡</span></footer>
   <div class="offline-banner offline-footer"><button type="button" class="offline-status" id="offline-status" aria-label="오프라인 준비 상태와 아이패드·비행기 모드 안내"><i aria-hidden="true"></i><span id="offline-status-text">오프라인 준비 확인 중…</span><span class="offline-info" aria-hidden="true">ⓘ</span></button><span class="offline-footer-caption">아이패드 설치 · 비행기 모드 안내</span></div>
