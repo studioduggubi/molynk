@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='20261025-r7';
+const VERSION='20261025-r8';
 const PREFIX='molynk-roulette-offline-';
 const CACHE=PREFIX+VERSION;
 const SCOPE=new URL(self.registration.scope);

@@ -47,7 +47,7 @@
       const color=s.prize==='again'?(s.index%3===0?'#f8d3e1':'#fbe7ee'):colors[s.prize];
       const path=`<path class="${s.prize==='cake'?'cake-jackpot-wedge':'prize-wedge'}" d="M260 260 L${p1.join(' ')} A260 260 0 ${end-start>180?1:0} 1 ${p2.join(' ')} Z" fill="${color}" stroke="${s.prize==='cake'?'#ffd46b':'#fff9f0'}" stroke-width="${s.prize==='cake'?4:2.5}"/>`;
       let label;
-      if(s.prize==='cake')label='<text y="-15" font-size="23" fill="#ffd778">✦</text><text y="13" font-size="14" font-weight="800" fill="#ffffff" stroke="#ffffff" stroke-width=".35">2%</text>';
+      if(s.prize==='cake')label='<text y="5" font-size="25" fill="#ffd778">✦</text>';
       else if(s.prize==='again')label='<text y="-15" font-size="38" fill="#b47691">♡</text><text y="28" font-size="27" font-weight="800" fill="#975c76">다음 기회에</text>';
       else if(s.prize==='gelato')label=`<image href="${imageFor(s)}" x="-83" y="-78" width="166" height="166"/><rect x="-53" y="36" width="106" height="39" rx="14" fill="#fff9f3" fill-opacity=".94"/><text y="64" font-size="27" font-weight="800" fill="#983b60">젤라토</text>`;
       else label=`<image href="${imageFor(s)}" x="-82" y="-94" width="164" height="154" preserveAspectRatio="xMidYMid meet"/><rect x="-54" y="35" width="108" height="40" rx="14" fill="#fbfff7" fill-opacity=".95"/><text y="64" font-size="27" font-weight="800" fill="#4e6b43">라우겐</text>`;

@@ -113,3 +113,15 @@ h1,.spin-button,.prize-card h2,.result-dialog h2,.next-button{font-family:Paperl
 .wheel-center.jackpot-center>img{filter:none}
 .event-controls .spin-button{-webkit-appearance:none;appearance:none}
 html{-webkit-text-size-adjust:100%}
+
+.entry-callout{margin:0 0 6px;font-family:Paperlogy,Pretendard,sans-serif;font-weight:800;line-height:1.2;color:#633749;letter-spacing:-.035em}.entry-callout>span,.entry-callout>strong{display:block}.entry-callout>span{font-size:17px;line-height:20px}.entry-callout>strong{font-size:21px;line-height:25px;color:#cb4a78}
+@media(min-width:700px){.intro .title-art{margin-top:5px;margin-bottom:12px}.entry-callout{margin-bottom:4px}}
+@media(min-width:700px) and (max-height:660px){.entry-callout>span{font-size:14px;line-height:16px}.entry-callout>strong{font-size:17px;line-height:20px}.entry-callout{margin-bottom:3px}.intro .title-art{max-width:150px;margin:0 0 6px}}
+@media(min-width:700px) and (max-height:620px){.entry-callout>span{font-size:13px;line-height:15px}.entry-callout>strong{font-size:16px;line-height:18px}.intro .title-art{max-width:120px;margin-bottom:4px}.intro .prize-card>img,.intro .laugen-card .laugen-pair{height:52px}.intro .laugen-card .laugen-pair img{height:47px}.intro .prize-cards{gap:6px}.intro .again-summary{margin-top:5px}}
+@media(max-width:699px){.entry-callout{order:0;text-align:center;margin:0 0 5px}.entry-callout>span{font-size:16px;line-height:19px}.entry-callout>strong{font-size:20px;line-height:24px}}
+
+.prize-tag{font-family:Paperlogy,Pretendard,sans-serif;font-size:11px;line-height:16px;color:#bd4f7b}.cake-card .prize-tag{color:#ffe09a}.laugen-card .prize-tag{color:#6d8b55}.again-summary{justify-content:center}.jackpot-center .center-prize em{font-size:1.05em;padding:3px 5px}
+
+@media(min-width:700px) and (min-height:661px) and (max-height:780px){.intro .title-art{margin-bottom:8px}}
+
+@media(min-width:700px){.intro .again-note{display:none}}
