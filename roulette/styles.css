@@ -125,3 +125,8 @@ html{-webkit-text-size-adjust:100%}
 @media(min-width:700px) and (min-height:661px) and (max-height:780px){.intro .title-art{margin-bottom:8px}}
 
 @media(min-width:700px){.intro .again-note{display:none}}
+
+.prize-tag{display:flex;align-items:baseline;gap:4px;line-height:22px}.prize-tag>span{font-size:9px;white-space:nowrap}.prize-tag>b{font-size:22px;line-height:22px;letter-spacing:-.04em}.again-summary{justify-content:space-between}
+.result-dialog .result-probability{font-family:Paperlogy,Pretendard,sans-serif;font-size:14px;line-height:20px;font-weight:800;color:#b94b79;margin:5px 0 0}
+@media(min-width:700px) and (max-width:850px){.prize-tag{gap:3px}.prize-tag>span{font-size:8px}.prize-tag>b{font-size:20px}}
+@media(min-width:700px) and (max-height:660px){.prize-tag{line-height:19px}.prize-tag>b{font-size:20px;line-height:19px}.result-dialog .result-probability{font-size:12px;line-height:18px;margin-top:4px}}

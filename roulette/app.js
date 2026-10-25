@@ -47,7 +47,7 @@
       const color=s.prize==='again'?(s.index%3===0?'#f8d3e1':'#fbe7ee'):colors[s.prize];
       const path=`<path class="${s.prize==='cake'?'cake-jackpot-wedge':'prize-wedge'}" d="M260 260 L${p1.join(' ')} A260 260 0 ${end-start>180?1:0} 1 ${p2.join(' ')} Z" fill="${color}" stroke="${s.prize==='cake'?'#ffd46b':'#fff9f0'}" stroke-width="${s.prize==='cake'?4:2.5}"/>`;
       let label;
-      if(s.prize==='cake')label='<text y="5" font-size="25" fill="#ffd778">✦</text>';
+      if(s.prize==='cake')label=`<text y="-15" font-size="23" fill="#ffd778">✦</text><text y="13" font-size="14" font-weight="800" fill="#ffffff">${PRIZES.cake.probability}%</text>`;
       else if(s.prize==='again')label='<text y="-15" font-size="38" fill="#b47691">♡</text><text y="28" font-size="27" font-weight="800" fill="#975c76">다음 기회에</text>';
       else if(s.prize==='gelato')label=`<image href="${imageFor(s)}" x="-83" y="-78" width="166" height="166"/><rect x="-53" y="36" width="106" height="39" rx="14" fill="#fff9f3" fill-opacity=".94"/><text y="64" font-size="27" font-weight="800" fill="#983b60">젤라토</text>`;
       else label=`<image href="${imageFor(s)}" x="-82" y="-94" width="164" height="154" preserveAspectRatio="xMidYMid meet"/><rect x="-54" y="35" width="108" height="40" rx="14" fill="#fbfff7" fill-opacity=".95"/><text y="64" font-size="27" font-weight="800" fill="#4e6b43">라우겐</text>`;
@@ -114,6 +114,8 @@
     const round=state.active;if(!round)return;const prize=PRIZES[round.prize],won=prize.id!=='again';
     resultDialog.classList.toggle('is-again',!won);$('result-badge').textContent=won?'LUCKY YOU!':'THANK YOU ♡';
     $('result-title').textContent=prize.title;$('result-description').textContent=prize.description;
+    const probability=Number.isFinite(round.probability)?round.probability:prize.probability;
+    $('result-probability').textContent=(Number.isFinite(round.probability)?'':'현재 ')+(won?'당첨 확률 ':'해당 결과 확률 ')+probability+'%';
     const art=$('result-art');art.className='result-art is-'+prize.id;
     const img=$('result-image'),alt=$('result-image-alt');img.hidden=!prize.image;alt.hidden=prize.id!=='laugen';
     if(prize.image){img.src=prize.image;img.alt=prize.id==='laugen'?'말차 라우겐':prize.name;}
@@ -147,7 +149,7 @@
     initAudio();
     if(state.active){showResult(false);return;}
     let draw;try{draw=Core.draw(state.rotation);}catch(error){$('play-status').textContent='추첨을 준비하지 못했어요. 새로고침 후 직원에게 알려주세요.';return;}
-    const number=state.sequence+1,round={number,at:Date.now(),prize:draw.prize,segmentIndex:draw.segmentIndex,target:draw.target,phase:'spinning'};
+    const number=state.sequence+1,round={number,at:Date.now(),prize:draw.prize,probability:PRIZES[draw.prize].probability,segmentIndex:draw.segmentIndex,target:draw.target,phase:'spinning'};
     const next={...state,sequence:number,counts:{...state.counts,[draw.prize]:state.counts[draw.prize]+1},history:[{number,at:round.at,prize:draw.prize},...state.history].slice(0,300),active:round};
     // Save the selected outcome before any animation. Refreshing cannot re-draw it.
     const start=state.rotation;if(!save(next))return;animate(start,draw.target);
@@ -178,6 +180,8 @@
     const csv='\ufeff'+rows.map(row=>row.map(esc).join(',')).join('\r\n'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
     a.href=url;a.download='molynk-lucky-spin-records.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
+  const rateLabels={cake:['cake-probability','center-probability','cake-caption-probability'],gelato:['gelato-probability'],laugen:['laugen-probability'],again:['again-probability']};
+  for(const [prize,ids] of Object.entries(rateLabels))for(const id of ids)$(id).textContent=PRIZES[prize].probability+'%';
   makeWheel();updateSoundButton();disc.style.transform=`rotate(${state.rotation}deg)`;setPhase('idle');
   spinButton.addEventListener('click',play);centerButton.addEventListener('click',play);$('next-button').addEventListener('click',nextParticipant);
   $('sound-button').addEventListener('click',()=>{sound=!sound;try{localStorage.setItem(SOUND_KEY,sound?'on':'off');}catch(error){}updateSoundButton();if(sound){initAudio();note(659,.08,.02);}});
