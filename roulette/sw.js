@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='20261026-r14';
+const VERSION='20261026-r15';
 const PREFIX='molynk-roulette-offline-';
 const CACHE=PREFIX+VERSION;
 const SCOPE=new URL(self.registration.scope);
@@ -10,6 +10,7 @@ const ASSETS=[
   'app.js?v='+VERSION,
   'offline.js?v='+VERSION,
   'manifest.webmanifest?v='+VERSION,
+  'assets/spin-cake.mp3',
   'assets/spin-win.mp3',
   'assets/spin-again.mp3',
   'assets/logo.svg',

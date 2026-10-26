@@ -83,7 +83,7 @@
       }
       // play() runs inside the original tap. Ticks and the result are a single track,
       // so Safari never has to authorize a new playback after the wheel stops.
-      const src=prizeId==='again'?'assets/spin-again.mp3':'assets/spin-win.mp3';
+      const src=prizeId==='cake'?'assets/spin-cake.mp3':prizeId==='again'?'assets/spin-again.mp3':'assets/spin-win.mp3';
       if(media.getAttribute('src')!==src){media.src=src;media.load();}
       media.currentTime=preview?6.8:motion.matches?5.95:0;media.muted=false;media.volume=1;
       mediaActive=true;mediaTesting=preview;soundFailed=false;updateSoundButton();
@@ -172,10 +172,10 @@
   }
   function celebration(prizeId){
     clearCelebration(true);
-    const won=prizeId!=='again';
+    const won=prizeId!=='again',jackpot=prizeId==='cake';
     if(!won){[659.25,587.33,523.25].forEach((f,i)=>note(f,.13,.025,i*.1));return;}
     // Synthesized locally: impact, drum rolls, brass-like fanfare, cymbals and fireworks.
-    // Every prize gets the same full celebration, including either laugen choice.
+    // Every prize gets the full celebration; cake adds an extended jackpot finale.
     for(let i=0;i<12;i++)noiseHit(.04+i*.04,.1,.08+i*.008,1600,'highpass');
     for(let i=0;i<14;i++)noiseHit(2.58+i*.04,.1,.07+i*.008,1600,'highpass');
     const melody=[[392,.56,.12],[392,.72,.12],[392,.88,.12],[523.25,1.04,.30],[659.25,1.44,.24],[783.99,1.76,.48],[659.25,2.32,.24],[783.99,2.64,.24],[1046.5,3.2,1.3]];
@@ -186,30 +186,41 @@
     [0,1.04,1.76,3.2,3.64,4.08].forEach(delay=>impact(delay));
     [0,1.04,3.2,4.08].forEach(delay=>noiseHit(delay,.9,.22,1000,'highpass'));
     [1046.5,1318.51,1567.98,2093,1567.98,2093,2637.02,3135.96].forEach((f,i)=>note(f,.45,.075,3.5+i*.14,'sine'));
+    if(jackpot){
+      [[523.25,4.8,.16],[659.25,5,.16],[783.99,5.2,.16],[1046.5,5.45,1.5]].forEach(([f,delay,duration])=>{
+        note(f,duration,.28,delay,'triangle');note(f,duration,.11,delay,'sawtooth');note(f*2,duration,.055,delay,'sine');
+      });
+      [261.63,329.63,392,523.25].forEach(f=>note(f,1.5,.1,5.45,'triangle'));
+      [4.8,5.45,6.05].forEach(delay=>impact(delay));noiseHit(5.45,1.2,.22,1000,'highpass');
+      [1046.5,1318.51,1567.98,2093,2637.02,3135.96].forEach((f,i)=>note(f,.45,.075,5.8+i*.18,'sine'));
+    }
     if(navigator.vibrate)navigator.vibrate([70,60,70,60,140]);
-    celebrationTimer=setTimeout(()=>clearCelebration(),6200);
+    celebrationTimer=setTimeout(()=>clearCelebration(),jackpot?8300:6200);
     if(motion.matches)return;
-    const layer=$('confetti-layer'),palette=['#f36d9e','#ffd56b','#b4d3a1','#fff4c6','#cc88df','#ff9abb'];
+    const layer=$('confetti-layer'),palette=jackpot?['#ffd56b','#fff4c6','#e9ad32','#ffffff','#ffc24b','#ffe9a0']:['#f36d9e','#ffd56b','#b4d3a1','#fff4c6','#cc88df','#ff9abb'];
     layer.dataset.prize=prizeId;
     // The layer lives inside the modal's top layer, so fireworks stay visible above its backdrop.
-    for(let i=0;i<160;i++){
+    for(let i=0;i<(jackpot?200:160);i++){
       const el=document.createElement('i'),side=i%2===0?-1:1,angle=-Math.PI/2-side*(.25+Math.random()*.85),force=280+Math.random()*430;
       el.className='confetti celebration-confetti';el.style.left=side<0?'8%':'92%';el.style.top='76%';
       el.style.setProperty('--dx',Math.cos(angle)*force+'px');el.style.setProperty('--dy',Math.sin(angle)*force+'px');el.style.setProperty('--rot',(Math.random()*1500-750)+'deg');el.style.setProperty('--color',palette[i%palette.length]);
-      el.style.animationDelay=(Math.random()*.65)+'s';layer.append(el);
+      el.style.animationDelay=((jackpot&&i>=100?4.65:0)+Math.random()*.65)+'s';layer.append(el);
     }
     const bursts=[[20,26,0],[79,23,1.04],[52,14,1.76],[28,61,3.2],[78,58,4.08]];
+    if(jackpot)bursts.push([22,28,4.8],[78,24,5.45],[50,42,6.05]);
     for(const [x,y,delay] of bursts){
       const ring=document.createElement('i');ring.className='firework-ring';ring.style.left=x+'%';ring.style.top=y+'%';ring.style.animationDelay=delay+'s';layer.append(ring);
-      for(let i=0;i<20;i++){
-        const spark=document.createElement('i'),angle=i/20*Math.PI*2,distance=65+Math.random()*80;
+      if(jackpot){ring.style.borderColor='#ffd56b';ring.style.boxShadow='0 0 24px #ffd56b';}
+      const sparkCount=jackpot?24:20;
+      for(let i=0;i<sparkCount;i++){
+        const spark=document.createElement('i'),angle=i/sparkCount*Math.PI*2,distance=(jackpot?90:65)+Math.random()*80;
         spark.className='firework-spark';spark.style.left=x+'%';spark.style.top=y+'%';spark.style.setProperty('--fx',Math.cos(angle)*distance+'px');spark.style.setProperty('--fy',Math.sin(angle)*distance+'px');spark.style.setProperty('--color',palette[i%palette.length]);spark.style.animationDelay=delay+'s';layer.append(spark);
       }
     }
   }
   function showResult(celebrate=false){
     const round=state.active;if(!round)return;const prize=PRIZES[round.prize],won=prize.id!=='again';
-    resultDialog.classList.toggle('is-again',!won);$('result-badge').textContent=won?'LUCKY YOU!':'THANK YOU ♡';
+    resultDialog.classList.toggle('is-again',!won);$('result-badge').textContent=prize.id==='cake'?'JACKPOT!':won?'LUCKY YOU!':'THANK YOU ♡';
     $('result-title').textContent=prize.title;$('result-description').textContent=prize.description;
     const probability=Number.isFinite(round.probability)?round.probability:prize.probability;
     $('result-probability').textContent=(Number.isFinite(round.probability)?'':'현재 ')+(won?'당첨 확률 ':'해당 결과 확률 ')+probability+'%';
@@ -240,7 +251,7 @@
     function frame(now){
       const p=Math.min(1,(now-began)/duration),eased=1-Math.pow(1-p,5),angle=start+(target-start)*eased;
       disc.style.transform=`rotate(${angle}deg)`;
-      const tick=Math.floor(angle/12);if(tick!==lastTick&&now-lastTone>50){note(850+p*150,.018,.014,0,'triangle');lastTick=tick;lastTone=now;}
+      const tick=Math.floor(angle/12);if(tick!==lastTick&&now-lastTone>50){note(850+p*150,.026,.065,0,'triangle');lastTick=tick;lastTone=now;}
       if(p<1)animationFrame=requestAnimationFrame(frame);else finish();
     }
     animationFrame=requestAnimationFrame(frame);
