@@ -15,11 +15,11 @@
   <meta property="og:image" content="https://studioduggubi.github.io/molynk/campaign.webp">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="manifest" href="manifest.webmanifest?v=20261026-r12">
-  <link rel="stylesheet" href="styles.css?v=20261026-r12">
-  <script src="core.js?v=20261026-r12" defer></script>
-  <script src="app.js?v=20261026-r12" defer></script>
-  <script src="offline.js?v=20261026-r12" defer></script>
+  <link rel="manifest" href="manifest.webmanifest?v=20261026-r13">
+  <link rel="stylesheet" href="styles.css?v=20261026-r13">
+  <script src="core.js?v=20261026-r13" defer></script>
+  <script src="app.js?v=20261026-r13" defer></script>
+  <script src="offline.js?v=20261026-r13" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#spin-button">돌림판 시작 버튼으로 이동</a>
@@ -41,23 +41,23 @@
       <section class="prize-shelf" aria-label="경품과 실제 당첨 확률">
         <div class="prize-shelf-heading"><span>경품 · 당첨 확률</span></div>
         <div class="prize-cards">
-          <article class="prize-card cake-card"><img src="assets/cake.webp" width="220" height="220" alt="분홍 리본 케이크 말랑이"><div class="prize-copy"><h2>케이크</h2><strong class="prize-tag"><span>당첨 확률</span><b id="cake-probability">15%</b></strong><p>두근두근 큰 행운</p></div></article>
+          <article class="prize-card cake-card"><img src="assets/cake.webp" width="220" height="220" alt="분홍 리본 케이크 말랑이"><div class="prize-copy"><h2>케이크</h2><strong class="prize-tag"><span>당첨 확률</span><b id="cake-probability">10%</b></strong><p>두근두근 큰 행운</p></div></article>
           <article class="prize-card gelato-card"><img src="assets/gelato.webp" width="220" height="220" alt="딸기 젤라토 말랑이"><div class="prize-copy"><h2>젤라토</h2><strong class="prize-tag"><span>당첨 확률</span><b id="gelato-probability">25%</b></strong><p>달콤한 행운 한 스쿱</p></div></article>
           <article class="prize-card laugen-card"><div class="laugen-pair"><img src="assets/matcha-laugen.webp" width="180" height="100" alt="말차 라우겐"><img src="assets/honey-laugen.webp" width="180" height="100" alt="허니 라우겐"></div><div class="prize-copy"><h2>라우겐</h2><strong class="prize-tag"><span>당첨 확률</span><b id="laugen-probability">40%</b></strong><p>말차·허니 중 1개 선택</p></div></article>
         </div>
-        <div class="again-summary"><span><i aria-hidden="true">♡</i> 다음 기회에</span><b id="again-probability">20%</b></div>
+        <div class="again-summary"><span><i aria-hidden="true">♡</i> 다음 기회에</span><b id="again-probability">25%</b></div>
         <p class="again-note">말랑한 행운을 만나보세요.</p>
       </section>
     </section>
 
     <section class="play-area" aria-label="행운 돌림판 게임">
-      <div class="wheel-caption jackpot-caption"><span aria-hidden="true">✦</span> 케이크를 잡아라! <b>당첨 확률 <span id="cake-caption-probability">15%</span></b><span aria-hidden="true">✦</span></div>
+      <div class="wheel-caption jackpot-caption"><span aria-hidden="true">✦</span> 케이크를 잡아라! <b>당첨 확률 <span id="cake-caption-probability">10%</span></b><span aria-hidden="true">✦</span></div>
       <div class="wheel-viewport"><div class="wheel-stage">
         <div class="floating-label" aria-hidden="true">행운을 꾹!</div>
         <div class="wheel-shell">
           <div class="wheel-lights" id="wheel-lights" aria-hidden="true"></div>
           <div class="wheel-disc" id="wheel-disc"><svg id="wheel-svg" viewBox="0 0 520 520" aria-hidden="true"></svg></div>
-          <button class="wheel-center jackpot-center" id="center-button" type="button" aria-label="행운 돌림판 돌리기"><svg class="jackpot-backplate" viewBox="0 0 200 200" aria-hidden="true"><defs><radialGradient id="jackpot-disc-fill" cx="38%" cy="24%" r="78%"><stop stop-color="#72133f"/><stop offset=".65" stop-color="#380820"/><stop offset="1" stop-color="#1b0a1d"/></radialGradient></defs><circle cx="100" cy="100" r="98" fill="#d7a444"/><circle cx="100" cy="100" r="94" fill="#fff0bb"/><circle cx="100" cy="100" r="90" fill="url(#jackpot-disc-fill)"/><circle cx="100" cy="100" r="97" fill="none" stroke="#fff1bb" stroke-width="1" stroke-dasharray="3 5"/></svg><b class="jackpot-kicker">SPECIAL PRIZE</b><img src="assets/cake.webp" alt="케이크 경품" width="180" height="180"><b class="center-prize">케이크 <em id="center-probability">15%</em></b><span id="center-label">꾹 눌러봐!</span><i class="jackpot-spark js1" aria-hidden="true">✦</i><i class="jackpot-spark js2" aria-hidden="true">✧</i></button>
+          <button class="wheel-center jackpot-center" id="center-button" type="button" aria-label="행운 돌림판 돌리기"><svg class="jackpot-backplate" viewBox="0 0 200 200" aria-hidden="true"><defs><radialGradient id="jackpot-disc-fill" cx="38%" cy="24%" r="78%"><stop stop-color="#72133f"/><stop offset=".65" stop-color="#380820"/><stop offset="1" stop-color="#1b0a1d"/></radialGradient></defs><circle cx="100" cy="100" r="98" fill="#d7a444"/><circle cx="100" cy="100" r="94" fill="#fff0bb"/><circle cx="100" cy="100" r="90" fill="url(#jackpot-disc-fill)"/><circle cx="100" cy="100" r="97" fill="none" stroke="#fff1bb" stroke-width="1" stroke-dasharray="3 5"/></svg><b class="jackpot-kicker">SPECIAL PRIZE</b><img src="assets/cake.webp" alt="케이크 경품" width="180" height="180"><b class="center-prize">케이크 <em id="center-probability">10%</em></b><span id="center-label">꾹 눌러봐!</span><i class="jackpot-spark js1" aria-hidden="true">✦</i><i class="jackpot-spark js2" aria-hidden="true">✧</i></button>
         </div>
         <div class="pointer" aria-hidden="true"><svg viewBox="0 0 56 72"><path d="M5 18Q5 3 28 3t23 15L30 64q-2 5-4 0Z" fill="#a9325a"/><path d="M10 18Q10 8 28 8t18 10L28 57Z" fill="#ed7598"/><ellipse cx="28" cy="18" rx="9" ry="7" fill="#fff6de"/></svg></div>
         <div class="wheel-base" aria-hidden="true"><span></span><i></i></div>
