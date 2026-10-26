@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='20261026-r13';
+const VERSION='20261026-r14';
 const PREFIX='molynk-roulette-offline-';
 const CACHE=PREFIX+VERSION;
 const SCOPE=new URL(self.registration.scope);
@@ -10,6 +10,8 @@ const ASSETS=[
   'app.js?v='+VERSION,
   'offline.js?v='+VERSION,
   'manifest.webmanifest?v='+VERSION,
+  'assets/spin-win.mp3',
+  'assets/spin-again.mp3',
   'assets/logo.svg',
   'assets/game-font.woff',
   'assets/paperlogy-extrabold.woff2',
@@ -33,6 +35,17 @@ async function readiness(){
   const present=await Promise.all(ASSETS.map(url=>cache.match(url,{ignoreSearch:true})));
   return {type:'OFFLINE_STATUS',version:VERSION,ready:present.every(Boolean),missing:ASSETS.filter((url,index)=>!present[index])};
 }
+async function cachedResponse(request,response){
+  // Safari seeks with Range requests, including when audio is played offline.
+  const range=request.headers?.get('range');
+  if(!range||!new URL(request.url).pathname.endsWith('.mp3'))return response;
+  const data=await response.arrayBuffer(),size=data.byteLength,match=/^bytes=(\d*)-(\d*)$/.exec(range);
+  if(!match||(!match[1]&&!match[2]))return new Response(null,{status:416,headers:{'Content-Range':`bytes */${size}`}});
+  let start=match[1]?Number(match[1]):Math.max(0,size-Number(match[2]));
+  const end=match[1]?(match[2]?Math.min(Number(match[2]),size-1):size-1):size-1;
+  if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start>end||start>=size)return new Response(null,{status:416,headers:{'Content-Range':`bytes */${size}`}});
+  return new Response(data.slice(start,end+1),{status:206,headers:{'Content-Type':'audio/mpeg','Accept-Ranges':'bytes','Content-Range':`bytes ${start}-${end}/${size}`,'Content-Length':String(end-start+1)}});
+}
 self.addEventListener('install',event=>{
   event.waitUntil(prepare().then(()=>self.skipWaiting()));
 });
@@ -52,7 +65,7 @@ self.addEventListener('fetch',event=>{
       ?await cache.match(ASSETS[0],{ignoreSearch:true})
       :await cache.match(request,{ignoreSearch:true});
     // A weak or disconnected network must not delay an already-prepared game.
-    if(cached)return cached;
+    if(cached)return cachedResponse(request,cached);
     return fetch(request);
   })());
 });
