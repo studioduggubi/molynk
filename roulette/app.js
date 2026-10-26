@@ -64,11 +64,15 @@
     try{
       const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;
       if(!audio){
-        audio=new Audio();audioOutput=audio.createGain();audioOutput.gain.value=.9;
-        // Keep the fuller fanfare loud and clear when its melody, chords and pops overlap.
+        audio=new Audio();audioOutput=audio.createGain();audioOutput.gain.value=1.15;
+        // Dense, punchy celebration mix, with a bounded final output on tablet speakers.
         const compressor=audio.createDynamicsCompressor();
-        compressor.threshold.value=-10;compressor.knee.value=6;compressor.ratio.value=12;compressor.attack.value=.003;compressor.release.value=.18;
-        audioOutput.connect(compressor);compressor.connect(audio.destination);
+        compressor.threshold.value=-14;compressor.knee.value=8;compressor.ratio.value=8;compressor.attack.value=.002;compressor.release.value=.12;
+        const makeup=audio.createGain(),ceiling=audio.createWaveShaper(),curve=new Float32Array(2049);
+        makeup.gain.value=1.9;
+        for(let i=0;i<curve.length;i++)curve[i]=.94*Math.tanh(1.8*(i/(curve.length-1)*2-1));
+        ceiling.curve=curve;ceiling.oversample='none';
+        audioOutput.connect(compressor);compressor.connect(makeup);makeup.connect(ceiling);ceiling.connect(audio.destination);
       }
       if(audio.state==='suspended'||audio.state==='interrupted')audio.resume().catch(()=>{});
     }catch(error){audio=null;audioOutput=null;}
@@ -87,16 +91,29 @@
       osc.onended=()=>{soundSources.delete(osc);osc.disconnect();gain.disconnect();};osc.start(start);osc.stop(start+duration+.015);
     }catch(error){}
   }
-  function fireworkSound(delay=0){
+  function noiseHit(delay,duration,volume,frequency,type='lowpass'){
     if(!sound||!audio||audio.state!=='running')return;
     try{
-      const duration=.32,buffer=audio.createBuffer(1,Math.ceil(audio.sampleRate*duration),audio.sampleRate),samples=buffer.getChannelData(0);
-      for(let i=0;i<samples.length;i++)samples[i]=(Math.random()*2-1)*Math.pow(1-i/samples.length,2);
+      const buffer=audio.createBuffer(1,Math.ceil(audio.sampleRate*duration),audio.sampleRate),samples=buffer.getChannelData(0);
+      for(let i=0;i<samples.length;i++)samples[i]=Math.random()*2-1;
       const source=audio.createBufferSource(),gain=audio.createGain(),filter=audio.createBiquadFilter(),start=audio.currentTime+delay;
-      source.buffer=buffer;filter.type='lowpass';filter.frequency.setValueAtTime(2400,start);gain.gain.setValueAtTime(.24,start);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
+      source.buffer=buffer;filter.type=type;filter.frequency.setValueAtTime(frequency,start);
+      gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(volume,start+.004);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
       source.connect(filter);filter.connect(gain);gain.connect(audioOutput);soundSources.add(source);
       source.onended=()=>{soundSources.delete(source);source.disconnect();filter.disconnect();gain.disconnect();};source.start(start);source.stop(start+duration);
     }catch(error){}
+  }
+  function impact(delay=0){
+    if(!sound||!audio||audio.state!=='running')return;
+    // Pitch-dropping body plus a higher knock that remains audible on an iPad.
+    for(const [high,low,volume] of [[190,55,.5],[420,110,.16]])try{
+      const osc=audio.createOscillator(),gain=audio.createGain(),start=audio.currentTime+delay;
+      osc.type='sine';osc.frequency.setValueAtTime(high,start);osc.frequency.exponentialRampToValueAtTime(low,start+.22);
+      gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(volume,start+.006);gain.gain.exponentialRampToValueAtTime(.0001,start+.5);
+      osc.connect(gain);gain.connect(audioOutput);soundSources.add(osc);
+      osc.onended=()=>{soundSources.delete(osc);osc.disconnect();gain.disconnect();};osc.start(start);osc.stop(start+.52);
+    }catch(error){}
+    noiseHit(delay,.55,.55,3200);
   }
   function clearCelebration(){
     if(celebrationTimer!==null){clearTimeout(celebrationTimer);celebrationTimer=null;}
@@ -107,16 +124,20 @@
     clearCelebration();
     const won=prizeId!=='again';
     if(!won){[659.25,587.33,523.25].forEach((f,i)=>note(f,.13,.025,i*.1));return;}
-    // Synthesized locally, so the fanfare and firework pops also work offline.
+    // Synthesized locally: impact, drum rolls, brass-like fanfare, cymbals and fireworks.
     // Every prize gets the same full celebration, including either laugen choice.
-    const melody=[[392,0,.12],[392,.16,.12],[392,.32,.12],[523.25,.5,.38],[659.25,.94,.18],[783.99,1.18,.44],[659.25,1.68,.18],[783.99,1.92,.18],[1046.5,2.16,1.12]];
-    melody.forEach(([f,delay,duration])=>{note(f,duration,.22,delay,'triangle');note(f,duration,.055,delay,'sawtooth');note(f*2,duration,.035,delay,'sine');});
-    const chords=[[.5,.4,[261.63,329.63,392]],[.94,.4,[349.23,440,523.25]],[1.68,.4,[293.66,392,493.88]],[2.16,1.25,[261.63,329.63,392,523.25]]];
-    chords.forEach(([delay,duration,frequencies])=>frequencies.forEach(f=>note(f,duration,.075,delay,'triangle')));
-    [[130.81,.5],[174.61,.94],[196,1.68],[130.81,2.16]].forEach(([f,delay])=>note(f,.3,.16,delay,'sine'));
-    [0,.5,1.18,2.16,2.7].forEach(delay=>fireworkSound(delay));
-    [1046.5,1318.51,1567.98,2093].forEach((f,i)=>note(f,.4,.055,2.5+i*.16,'sine'));
+    for(let i=0;i<12;i++)noiseHit(.04+i*.04,.1,.08+i*.008,1600,'highpass');
+    for(let i=0;i<14;i++)noiseHit(2.58+i*.04,.1,.07+i*.008,1600,'highpass');
+    const melody=[[392,.56,.12],[392,.72,.12],[392,.88,.12],[523.25,1.04,.30],[659.25,1.44,.24],[783.99,1.76,.48],[659.25,2.32,.24],[783.99,2.64,.24],[1046.5,3.2,1.3]];
+    melody.forEach(([f,delay,duration])=>{note(f,duration,.28,delay,'triangle');note(f,duration,.11,delay,'sawtooth');note(f*2,duration,.055,delay,'sine');});
+    const chords=[[1.04,.35,[261.63,329.63,392]],[1.44,.65,[349.23,440,523.25]],[2.32,.65,[293.66,392,493.88]],[3.2,1.4,[261.63,329.63,392,523.25]]];
+    chords.forEach(([delay,duration,frequencies])=>frequencies.forEach(f=>note(f,duration,.1,delay,'triangle')));
+    [[130.81,1.04],[174.61,1.44],[196,2.32],[130.81,3.2]].forEach(([f,delay])=>note(f,.4,.22,delay,'triangle'));
+    [0,1.04,1.76,3.2,3.64,4.08].forEach(delay=>impact(delay));
+    [0,1.04,3.2,4.08].forEach(delay=>noiseHit(delay,.9,.22,1000,'highpass'));
+    [1046.5,1318.51,1567.98,2093,1567.98,2093,2637.02,3135.96].forEach((f,i)=>note(f,.45,.075,3.5+i*.14,'sine'));
     if(navigator.vibrate)navigator.vibrate([70,60,70,60,140]);
+    celebrationTimer=setTimeout(clearCelebration,6200);
     if(motion.matches)return;
     const layer=$('confetti-layer'),palette=['#f36d9e','#ffd56b','#b4d3a1','#fff4c6','#cc88df','#ff9abb'];
     layer.dataset.prize=prizeId;
@@ -127,7 +148,7 @@
       el.style.setProperty('--dx',Math.cos(angle)*force+'px');el.style.setProperty('--dy',Math.sin(angle)*force+'px');el.style.setProperty('--rot',(Math.random()*1500-750)+'deg');el.style.setProperty('--color',palette[i%palette.length]);
       el.style.animationDelay=(Math.random()*.65)+'s';layer.append(el);
     }
-    const bursts=[[20,26,0],[79,23,.5],[52,14,1.18],[28,61,2.16],[78,58,2.7]];
+    const bursts=[[20,26,0],[79,23,1.04],[52,14,1.76],[28,61,3.2],[78,58,4.08]];
     for(const [x,y,delay] of bursts){
       const ring=document.createElement('i');ring.className='firework-ring';ring.style.left=x+'%';ring.style.top=y+'%';ring.style.animationDelay=delay+'s';layer.append(ring);
       for(let i=0;i<20;i++){
@@ -135,7 +156,6 @@
         spark.className='firework-spark';spark.style.left=x+'%';spark.style.top=y+'%';spark.style.setProperty('--fx',Math.cos(angle)*distance+'px');spark.style.setProperty('--fy',Math.sin(angle)*distance+'px');spark.style.setProperty('--color',palette[i%palette.length]);spark.style.animationDelay=delay+'s';layer.append(spark);
       }
     }
-    celebrationTimer=setTimeout(clearCelebration,5000);
   }
   function showResult(celebrate=false){
     const round=state.active;if(!round)return;const prize=PRIZES[round.prize],won=prize.id!=='again';
