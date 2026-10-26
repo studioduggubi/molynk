@@ -118,7 +118,7 @@
         const compressor=audio.createDynamicsCompressor();
         compressor.threshold.value=-14;compressor.knee.value=8;compressor.ratio.value=8;compressor.attack.value=.002;compressor.release.value=.12;
         const makeup=audio.createGain(),ceiling=audio.createWaveShaper(),curve=new Float32Array(2049);
-        makeup.gain.value=1.9;
+        makeup.gain.value=3.8;
         for(let i=0;i<curve.length;i++)curve[i]=.94*Math.tanh(1.8*(i/(curve.length-1)*2-1));
         ceiling.curve=curve;ceiling.oversample='none';
         audioOutput.connect(compressor);compressor.connect(makeup);makeup.connect(ceiling);ceiling.connect(audio.destination);
