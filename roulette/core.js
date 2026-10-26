@@ -2,13 +2,13 @@
   'use strict';
   const PRIZES=Object.freeze({
     cake:Object.freeze({id:'cake',name:'케이크',probability:15,title:'케이크 당첨!',description:'오늘의 커다란 행운이 찾아왔어요.',image:'assets/cake.webp'}),
-    gelato:Object.freeze({id:'gelato',name:'젤라토',probability:30,title:'젤라토 당첨!',description:'달콤한 비주얼의 말랑이를 만나보세요.',image:'assets/gelato.webp'}),
-    laugen:Object.freeze({id:'laugen',name:'라우겐',probability:50,title:'라우겐 당첨!',description:'말차 라우겐 또는 허니 라우겐 중 1개를 골라주세요.',image:'assets/matcha-laugen.webp'}),
-    again:Object.freeze({id:'again',name:'다음 기회에',probability:5,title:'아쉽지만, 다음 기회에!',description:'함께 돌려주셔서 감사해요. 오늘도 말랑한 하루 보내세요.',image:null})
+    gelato:Object.freeze({id:'gelato',name:'젤라토',probability:25,title:'젤라토 당첨!',description:'달콤한 비주얼의 말랑이를 만나보세요.',image:'assets/gelato.webp'}),
+    laugen:Object.freeze({id:'laugen',name:'라우겐',probability:40,title:'라우겐 당첨!',description:'말차 라우겐 또는 허니 라우겐 중 1개를 골라주세요.',image:'assets/matcha-laugen.webp'}),
+    again:Object.freeze({id:'again',name:'다음 기회에',probability:20,title:'아쉽지만, 다음 기회에!',description:'함께 돌려주셔서 감사해요. 오늘도 말랑한 하루 보내세요.',image:null})
   });
   // Six proportional wedges leave more space for product photographs and labels.
-  const LAYOUT_VERSION=4;
-  const layout=[['cake',15],['again',2.5],['laugen',25],['gelato',30],['again',2.5],['laugen',25]];
+  const LAYOUT_VERSION=5;
+  const layout=[['cake',15],['again',10],['laugen',20],['gelato',25],['again',10],['laugen',20]];
   let cursor=0;
   const SEGMENTS=Object.freeze(layout.map(([prize,weight],index)=>{
     const segment=Object.freeze({index,prize,weight,start:cursor,end:cursor+weight*100});cursor=segment.end;return segment;
