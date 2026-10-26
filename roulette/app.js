@@ -5,7 +5,8 @@
   const resultDialog=$('result-dialog'),historyDialog=$('history-dialog'),motion=matchMedia('(prefers-reduced-motion: reduce)');
   const KEY='molynk-lucky-spin-v1',SOUND_KEY='molynk-lucky-spin-sound';
   const fresh=()=>({version:1,layoutVersion:Core.LAYOUT_VERSION,sequence:0,counts:{cake:0,gelato:0,laugen:0,again:0},history:[],active:null,rotation:0});
-  let state=fresh(),busy=false,storageReady=true,audio=null,sound=true,animationFrame=null,celebrationTimer=null;
+  let state=fresh(),busy=false,storageReady=true,audio=null,audioOutput=null,sound=true,animationFrame=null,celebrationTimer=null;
+  const soundSources=new Set();
   try{
     const raw=localStorage.getItem(KEY);
     if(raw){
@@ -48,6 +49,7 @@
       const path=`<path class="${s.prize==='cake'?'cake-jackpot-wedge':'prize-wedge'}" d="M260 260 L${p1.join(' ')} A260 260 0 ${end-start>180?1:0} 1 ${p2.join(' ')} Z" fill="${color}" stroke="${s.prize==='cake'?'#ffd46b':'#fff9f0'}" stroke-width="${s.prize==='cake'?4:2.5}"/>`;
       let label;
       if(s.prize==='cake')label=`<text y="-15" font-size="23" fill="#ffd778">✦</text><text y="13" font-size="14" font-weight="800" fill="#ffffff">${PRIZES.cake.probability}%</text>`;
+      else if(s.prize==='again'&&s.weight<8)label='<text y="5" font-size="17" font-weight="800" fill="#975c76">꽝</text>';
       else if(s.prize==='again')label='<text y="-15" font-size="38" fill="#b47691">♡</text><text y="28" font-size="27" font-weight="800" fill="#975c76">다음 기회에</text>';
       else if(s.prize==='gelato')label=`<image href="${imageFor(s)}" x="-83" y="-78" width="166" height="166"/><rect x="-53" y="36" width="106" height="39" rx="14" fill="#fff9f3" fill-opacity=".94"/><text y="64" font-size="27" font-weight="800" fill="#983b60">젤라토</text>`;
       else label=`<image href="${imageFor(s)}" x="-82" y="-94" width="164" height="154" preserveAspectRatio="xMidYMid meet"/><rect x="-54" y="35" width="108" height="40" rx="14" fill="#fbfff7" fill-opacity=".95"/><text y="64" font-size="27" font-weight="800" fill="#4e6b43">라우겐</text>`;
@@ -59,11 +61,31 @@
   function updateSoundButton(){const b=$('sound-button');b.setAttribute('aria-pressed',String(sound));b.setAttribute('aria-label',sound?'효과음 끄기':'효과음 켜기');b.querySelector('span').textContent=sound?'소리 켜짐':'소리 꺼짐';}
   function initAudio(){
     if(!sound)return;
-    try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;audio??=new Audio();if(audio.state==='suspended')audio.resume().catch(()=>{});}catch(error){audio=null;}
+    try{
+      const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;
+      if(!audio){
+        audio=new Audio();audioOutput=audio.createGain();audioOutput.gain.value=.9;
+        // Keep the fuller fanfare loud and clear when its melody, chords and pops overlap.
+        const compressor=audio.createDynamicsCompressor();
+        compressor.threshold.value=-10;compressor.knee.value=6;compressor.ratio.value=12;compressor.attack.value=.003;compressor.release.value=.18;
+        audioOutput.connect(compressor);compressor.connect(audio.destination);
+      }
+      if(audio.state==='suspended'||audio.state==='interrupted')audio.resume().catch(()=>{});
+    }catch(error){audio=null;audioOutput=null;}
+  }
+  function stopSounds(){
+    for(const source of soundSources)try{source.stop();}catch(error){}
+    soundSources.clear();
   }
   function note(frequency,duration=.045,volume=.028,delay=0,type='sine'){
     if(!sound||!audio||audio.state!=='running')return;
-    try{const osc=audio.createOscillator(),gain=audio.createGain(),start=audio.currentTime+delay;osc.type=type;osc.frequency.setValueAtTime(frequency,start);gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(volume,start+.005);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);osc.connect(gain);gain.connect(audio.destination);osc.start(start);osc.stop(start+duration+.015);osc.onended=()=>{osc.disconnect();gain.disconnect();};}catch(error){}
+    try{
+      const osc=audio.createOscillator(),gain=audio.createGain(),start=audio.currentTime+delay;
+      osc.type=type;osc.frequency.setValueAtTime(frequency,start);gain.gain.setValueAtTime(.0001,start);
+      gain.gain.exponentialRampToValueAtTime(volume,start+.005);gain.gain.exponentialRampToValueAtTime(volume*.65,start+duration*.55);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
+      osc.connect(gain);gain.connect(audioOutput);soundSources.add(osc);
+      osc.onended=()=>{soundSources.delete(osc);osc.disconnect();gain.disconnect();};osc.start(start);osc.stop(start+duration+.015);
+    }catch(error){}
   }
   function fireworkSound(delay=0){
     if(!sound||!audio||audio.state!=='running')return;
@@ -71,36 +93,41 @@
       const duration=.32,buffer=audio.createBuffer(1,Math.ceil(audio.sampleRate*duration),audio.sampleRate),samples=buffer.getChannelData(0);
       for(let i=0;i<samples.length;i++)samples[i]=(Math.random()*2-1)*Math.pow(1-i/samples.length,2);
       const source=audio.createBufferSource(),gain=audio.createGain(),filter=audio.createBiquadFilter(),start=audio.currentTime+delay;
-      source.buffer=buffer;filter.type='lowpass';filter.frequency.setValueAtTime(1900,start);gain.gain.setValueAtTime(.085,start);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
-      source.connect(filter);filter.connect(gain);gain.connect(audio.destination);source.start(start);source.stop(start+duration);
-      source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();};
+      source.buffer=buffer;filter.type='lowpass';filter.frequency.setValueAtTime(2400,start);gain.gain.setValueAtTime(.24,start);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
+      source.connect(filter);filter.connect(gain);gain.connect(audioOutput);soundSources.add(source);
+      source.onended=()=>{soundSources.delete(source);source.disconnect();filter.disconnect();gain.disconnect();};source.start(start);source.stop(start+duration);
     }catch(error){}
   }
   function clearCelebration(){
     if(celebrationTimer!==null){clearTimeout(celebrationTimer);celebrationTimer=null;}
+    stopSounds();
     $('confetti-layer').replaceChildren();
   }
   function celebration(prizeId){
     clearCelebration();
-    const won=prizeId!=='again',jackpot=prizeId==='cake';
+    const won=prizeId!=='again';
     if(!won){[659.25,587.33,523.25].forEach((f,i)=>note(f,.13,.025,i*.1));return;}
     // Synthesized locally, so the fanfare and firework pops also work offline.
-    const melody=[[523.25,0,.12],[659.25,.12,.12],[783.99,.24,.18],[1046.5,.44,.2],[783.99,.68,.13],[1046.5,.84,.55]];
-    melody.forEach(([f,delay,duration])=>{note(f,duration,.07,delay,'triangle');note(f*2,duration,.018,delay,'sine');});
-    [523.25,659.25,783.99].forEach(f=>note(f,.65,.024,.84,'sine'));
-    fireworkSound(0);fireworkSound(.55);if(jackpot){fireworkSound(1.15);[1046.5,1318.51,1567.98].forEach((f,i)=>note(f,.35,.045,1.45+i*.12,'triangle'));}
-    if(navigator.vibrate)navigator.vibrate(jackpot?[70,60,70,60,140]:[50,50,100]);
+    // Every prize gets the same full celebration, including either laugen choice.
+    const melody=[[392,0,.12],[392,.16,.12],[392,.32,.12],[523.25,.5,.38],[659.25,.94,.18],[783.99,1.18,.44],[659.25,1.68,.18],[783.99,1.92,.18],[1046.5,2.16,1.12]];
+    melody.forEach(([f,delay,duration])=>{note(f,duration,.22,delay,'triangle');note(f,duration,.055,delay,'sawtooth');note(f*2,duration,.035,delay,'sine');});
+    const chords=[[.5,.4,[261.63,329.63,392]],[.94,.4,[349.23,440,523.25]],[1.68,.4,[293.66,392,493.88]],[2.16,1.25,[261.63,329.63,392,523.25]]];
+    chords.forEach(([delay,duration,frequencies])=>frequencies.forEach(f=>note(f,duration,.075,delay,'triangle')));
+    [[130.81,.5],[174.61,.94],[196,1.68],[130.81,2.16]].forEach(([f,delay])=>note(f,.3,.16,delay,'sine'));
+    [0,.5,1.18,2.16,2.7].forEach(delay=>fireworkSound(delay));
+    [1046.5,1318.51,1567.98,2093].forEach((f,i)=>note(f,.4,.055,2.5+i*.16,'sine'));
+    if(navigator.vibrate)navigator.vibrate([70,60,70,60,140]);
     if(motion.matches)return;
     const layer=$('confetti-layer'),palette=['#f36d9e','#ffd56b','#b4d3a1','#fff4c6','#cc88df','#ff9abb'];
     layer.dataset.prize=prizeId;
     // The layer lives inside the modal's top layer, so fireworks stay visible above its backdrop.
-    for(let i=0;i<(jackpot?160:110);i++){
+    for(let i=0;i<160;i++){
       const el=document.createElement('i'),side=i%2===0?-1:1,angle=-Math.PI/2-side*(.25+Math.random()*.85),force=280+Math.random()*430;
       el.className='confetti celebration-confetti';el.style.left=side<0?'8%':'92%';el.style.top='76%';
       el.style.setProperty('--dx',Math.cos(angle)*force+'px');el.style.setProperty('--dy',Math.sin(angle)*force+'px');el.style.setProperty('--rot',(Math.random()*1500-750)+'deg');el.style.setProperty('--color',palette[i%palette.length]);
       el.style.animationDelay=(Math.random()*.65)+'s';layer.append(el);
     }
-    const bursts=jackpot?[[20,26,0],[79,23,.25],[52,14,.6],[28,61,.95],[78,58,1.25]]:[[22,25,0],[78,29,.3],[51,17,.7]];
+    const bursts=[[20,26,0],[79,23,.5],[52,14,1.18],[28,61,2.16],[78,58,2.7]];
     for(const [x,y,delay] of bursts){
       const ring=document.createElement('i');ring.className='firework-ring';ring.style.left=x+'%';ring.style.top=y+'%';ring.style.animationDelay=delay+'s';layer.append(ring);
       for(let i=0;i<20;i++){
@@ -108,7 +135,7 @@
         spark.className='firework-spark';spark.style.left=x+'%';spark.style.top=y+'%';spark.style.setProperty('--fx',Math.cos(angle)*distance+'px');spark.style.setProperty('--fy',Math.sin(angle)*distance+'px');spark.style.setProperty('--color',palette[i%palette.length]);spark.style.animationDelay=delay+'s';layer.append(spark);
       }
     }
-    celebrationTimer=setTimeout(clearCelebration,4400);
+    celebrationTimer=setTimeout(clearCelebration,5000);
   }
   function showResult(celebrate=false){
     const round=state.active;if(!round)return;const prize=PRIZES[round.prize],won=prize.id!=='again';
@@ -184,7 +211,7 @@
   for(const [prize,ids] of Object.entries(rateLabels))for(const id of ids)$(id).textContent=PRIZES[prize].probability+'%';
   makeWheel();updateSoundButton();disc.style.transform=`rotate(${state.rotation}deg)`;setPhase('idle');
   spinButton.addEventListener('click',play);centerButton.addEventListener('click',play);$('next-button').addEventListener('click',nextParticipant);
-  $('sound-button').addEventListener('click',()=>{sound=!sound;try{localStorage.setItem(SOUND_KEY,sound?'on':'off');}catch(error){}updateSoundButton();if(sound){initAudio();note(659,.08,.02);}});
+  $('sound-button').addEventListener('click',()=>{sound=!sound;try{localStorage.setItem(SOUND_KEY,sound?'on':'off');}catch(error){}updateSoundButton();if(sound){initAudio();note(659,.08,.02);}else stopSounds();});
   $('history-button').addEventListener('click',()=>{renderHistory();historyDialog.showModal();});$('history-close').addEventListener('click',()=>historyDialog.close());$('csv-button').addEventListener('click',downloadCSV);
   $('history-dialog').addEventListener('click',event=>{if(event.target===historyDialog){const r=historyDialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)historyDialog.close();}});
   if(document.fullscreenEnabled){$('fullscreen-button').hidden=false;$('fullscreen-button').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(error){$('play-status').textContent='이 브라우저에서는 전체 화면 전환이 지원되지 않아요.';}});document.addEventListener('fullscreenchange',()=>{$('fullscreen-button').querySelector('span').textContent=document.fullscreenElement?'화면 복원':'전체 화면';});}
